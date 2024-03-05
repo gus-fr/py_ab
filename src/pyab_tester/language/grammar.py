@@ -2,7 +2,6 @@ import operator
 
 from sly import Parser
 
-from pyab_tester.language.lexer import ExperimentLexer
 from pyab_tester.data_structures.syntax_tree import (
     ExperimentAST,
     ExperimentConditional,
@@ -11,6 +10,7 @@ from pyab_tester.data_structures.syntax_tree import (
     RecursivePredicate,
     TerminalPredicate,
 )
+from pyab_tester.language.lexer import ExperimentLexer
 
 
 class ExperimentParser(Parser):
