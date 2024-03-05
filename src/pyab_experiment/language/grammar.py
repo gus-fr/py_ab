@@ -1,5 +1,3 @@
-import operator
-
 from sly import Parser
 
 from pyab_experiment.data_structures.syntax_tree import (
@@ -9,9 +7,11 @@ from pyab_experiment.data_structures.syntax_tree import (
     Identifier,
     RecursivePredicate,
     TerminalPredicate,
+    LogicalOperatorEnum,
+    BooleanOperatorEnum
 )
 from pyab_experiment.language.lexer import ExperimentLexer
-from pyab_experiment.utils.custom_operators import operator_in, operator_not_in
+
 
 
 class ExperimentParser(Parser):
@@ -110,7 +110,7 @@ class ExperimentParser(Parser):
     def predicate(self, p):
         return RecursivePredicate(
             left_predicate=p.predicate0,
-            boolean_operator=operator.and_,
+            boolean_operator=BooleanOperatorEnum.AND,
             right_predicate=p.predicate1,
         )
 
@@ -118,7 +118,7 @@ class ExperimentParser(Parser):
     def predicate(self, p):
         return RecursivePredicate(
             left_predicate=p.predicate0,
-            boolean_operator=operator.or_,
+            boolean_operator=BooleanOperatorEnum.OR,
             right_predicate=p.predicate1,
         )
 
@@ -126,7 +126,7 @@ class ExperimentParser(Parser):
     def predicate(self, p):
         return RecursivePredicate(
             left_predicate=p.predicate,
-            boolean_operator=operator.not_,
+            boolean_operator=BooleanOperatorEnum.NOT,
             right_predicate=None,
         )
 
@@ -158,35 +158,35 @@ class ExperimentParser(Parser):
 
     @_("LT")
     def logical_op(self, p):
-        return operator.lt
+        return LogicalOperatorEnum.LT
 
     @_("GT")
     def logical_op(self, p):
-        return operator.gt
+        return LogicalOperatorEnum.GT
 
     @_("GE")
     def logical_op(self, p):
-        return operator.ge
+        return LogicalOperatorEnum.GE
 
     @_("LE")
     def logical_op(self, p):
-        return operator.le
+        return LogicalOperatorEnum.LE
 
     @_("IN")
     def logical_op(self, p):
-        return operator_in
+        return LogicalOperatorEnum.IN
 
     @_("NE")
     def logical_op(self, p):
-        return operator.ne
+        return LogicalOperatorEnum.NE
 
     @_("EQ")
     def logical_op(self, p):
-        return operator.eq
+        return LogicalOperatorEnum.EQ
 
     @_("NOT_IN")
     def logical_op(self, p):
-        return operator_not_in
+        return LogicalOperatorEnum.NOT_IN
 
     # *********** RETURN STATEMENTS *****************
     @_("RETURN return_statement")
