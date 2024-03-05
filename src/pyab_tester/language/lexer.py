@@ -49,7 +49,7 @@ class ExperimentLexer(Lexer):
     # Special symbols
     LPAREN = r"\("
     RPAREN = r"\)"
-    MINUS = r"\-"
+    MINUS = r"-"
     COMMA = r","
     COLON = r":"
     LBRACE = r"{"
@@ -97,9 +97,11 @@ class ExperimentLexer(Lexer):
         t.value = t.value[1:-1]
         return t
 
+    # Comments
+    ignore_inline_comment = r"//.*"
+
     # Ignored pattern
     ignore_newline = r"\n+"
-    ignore_comment = r"\#.*"
     ignore_ws = r"\s+"
     # Extra action for newlines
     def ignore_newline(self, t):
