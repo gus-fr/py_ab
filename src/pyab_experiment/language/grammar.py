@@ -2,7 +2,7 @@ import operator
 
 from sly import Parser
 
-from pyab_tester.data_structures.syntax_tree import (
+from pyab_experiment.data_structures.syntax_tree import (
     ExperimentAST,
     ExperimentConditional,
     ExperimentGroup,
@@ -10,8 +10,8 @@ from pyab_tester.data_structures.syntax_tree import (
     RecursivePredicate,
     TerminalPredicate,
 )
-from pyab_tester.language.lexer import ExperimentLexer
-from pyab_tester.utils.custom_operators import operator_in, operator_not_in
+from pyab_experiment.language.lexer import ExperimentLexer
+from pyab_experiment.utils.custom_operators import operator_in, operator_not_in
 
 
 class ExperimentParser(Parser):
