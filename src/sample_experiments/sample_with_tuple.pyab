@@ -2,7 +2,7 @@
 
 
 def my_experiment_id:
-    if field1 in ('a','b','c',1,2,3) and not field2 >4{
+    if field1 in ('a','b','c',1,2,3) and field2 not in ('d','e','f',5,6,7){
             return "Setting1" weighted 1,
                     "Setting2" weighted 1
 
