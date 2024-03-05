@@ -1,11 +1,11 @@
 /*************************************************************
-Sample experiment definition
+Sample experiment definition with all language features
 the language syntax is quite basic. The definition is inspired
 by (a heavyly reduced subset of) C syntax. Unlike python indentation has no meaning
 However for readability it's still highly recommended
 **************************************************************/
 
-def my_experiment_id{
+def complex_experiment_defn{
     // an optional salt (must come before splitting fields)
     salt: "csdvs887"
 

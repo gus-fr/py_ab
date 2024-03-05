@@ -1,0 +1,7 @@
+/* adding some block code */
+
+
+def experiment_w_comments{
+            return "Setting 1" weighted 0.5,
+                    "Setting 2" weighted 0.5
+}
