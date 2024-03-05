@@ -1,0 +1,36 @@
+# Sample experiment definition
+# the language syntax is quite basic. The language definition is inspired
+# by (a heavyly reduced subset of) C style rules. Unlike python indentation has no meaning
+# However for readability it's still highly recommended
+
+def my_experiment_id:
+    #an optional salt (must come before splitting fields)
+    salt: "csdvs887"
+
+    #define splitting fields here, these define how a group is chosen
+    splitters: my_fld, my_fld_1
+
+    # The last part is a conditional expression.
+    # here we define the conditions for choosing a group.
+
+    # boolean operator precedence follows standard practice
+    # i.e. 'not' has highest precedence, followed by 'and',
+    # to finish with 'or' as the lowest precedence operator
+    if field1 in ('a','b',1) and not field2 >4 or field3<9{
+        if zone == 'London'{
+
+            # Return statements are probabilistic by nature
+            # the weight defines the relative frequency of seeing one setting vs others
+            return 123 weighted 3.4,
+                    9.3 weighted 5,
+                    "abc" weighted 3
+        }
+        else{
+            return "Setting1" weighted 1,
+                    "Setting2" weighted 0
+
+        }
+    }
+    else{
+        return "default" weighted 1
+    }
