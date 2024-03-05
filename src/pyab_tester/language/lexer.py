@@ -10,7 +10,8 @@ uses YACC (via the sly implementation) the heavy FSA lifting
 
 
 class ExperimentLexer(Lexer):
-    """ Lexer rules for our language """
+    """Lexer rules for our language"""
+
     # define token list to be used by the grammar
     tokens = {
         ID,
