@@ -64,19 +64,6 @@ class ExperimentParser(Parser):
     def fields(self, p):
         return [p.ID]
 
-    # ************ CONDITIONALS ******************
-    # predicate:: term logical_op term
-    # predicate:: LPAREN predicate RPAREN
-    # predicate:: predicate AND predicate
-    # predicate:: predicate OR predicate
-    # predicate:: NOT predicate
-
-    # term:: ID
-    # term:: literal
-    # term:: tuple
-
-    # tuple:: ...
-
     # *************** Conditional rules *******************************
     @_("IF predicate LBRACE conditional RBRACE subconditional ")
     def conditional(self, p):
