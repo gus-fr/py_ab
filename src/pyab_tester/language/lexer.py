@@ -62,7 +62,7 @@ class ExperimentLexer(Lexer):
     GE = r">="
     LE = r"<="
     NE = r"!="
-    IN = r"IN"
+    IN = r"in"
     NOT_IN = r"not\s+in"
     NOT = r"not"
 

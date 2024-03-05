@@ -11,6 +11,7 @@ from pyab_tester.data_structures.syntax_tree import (
     TerminalPredicate,
 )
 from pyab_tester.language.lexer import ExperimentLexer
+from pyab_tester.utils.custom_operators import operator_in, operator_not_in
 
 
 class ExperimentParser(Parser):
