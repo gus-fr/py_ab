@@ -97,7 +97,12 @@ class ExperimentLexer(Lexer):
         t.value = t.value[1:-1]
         return t
 
-    # Comments
+    # block comment
+    @_(r"/\*")
+    def BLOCK_COMMENT_START(self, t):
+        self.push_state(BlockComment)
+
+    # regular comments
     ignore_inline_comment = r"//.*"
 
     # Ignored pattern
@@ -110,3 +115,22 @@ class ExperimentLexer(Lexer):
     def error(self, t):
         print("Illegal character '%s'" % t.value[0])
         self.index += 1
+
+
+class BlockComment(Lexer):
+    """state that deals and discards C style block comments"""
+
+    tokens = {BLOCK_COMMENT_END}
+
+    @_(r".*\*/")
+    def BLOCK_COMMENT_END(self, t):
+        self.pop_state()
+
+    @_(r".+")
+    def t_block_comment_content(self, t):
+        pass
+
+    ignore_newline = r"\n+"
+    # Extra action for newlines
+    def ignore_newline(self, t):
+        self.lineno += t.value.count("\n")

@@ -1,8 +1,9 @@
-// Sample experiment definition
-// the language syntax is quite basic. The language definition is inspired
-// by (a heavyly reduced subset of) C syntax. Unlike python indentation has no meaning
-// However for readability it's still highly recommended
-
+/*************************************************************
+Sample experiment definition
+the language syntax is quite basic. The definition is inspired
+by (a heavyly reduced subset of) C syntax. Unlike python indentation has no meaning
+However for readability it's still highly recommended
+**************************************************************/
 
 def my_experiment_id{
     // an optional salt (must come before splitting fields)
@@ -24,7 +25,8 @@ def my_experiment_id{
             // the weight defines the relative frequency of seeing one setting vs others
             return 123 weighted 3.4,
                     9.3 weighted 5,
-                    "abc" weighted 3
+                    "abc" weighted 3 /* like in C, embedded, multiline
+                    block comment also works */
         }
         else if field5 != 'x'{
             return "Setting 1.1.1" weighted 1,
