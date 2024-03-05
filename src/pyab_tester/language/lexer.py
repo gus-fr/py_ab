@@ -71,7 +71,7 @@ class ExperimentLexer(Lexer):
     SALT = r"salt"
     SPLITTERS = r"splitters"
     IF = r"if"
-    ELIF = r"elif"
+    ELIF = r"else\s*if"
     ELSE = r"else"
     WEIGHTED = r"weighted"
     RETURN = r"return"

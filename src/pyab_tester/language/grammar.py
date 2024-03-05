@@ -23,7 +23,7 @@ class ExperimentParser(Parser):
         ("left", NOT),
     )
 
-    @_("header_id opt_header_salt opt_splitter conditional")
+    @_("header_id LBRACE opt_header_salt opt_splitter conditional RBRACE")
     def header(self, p):
         return ExperimentAST(
             id=p.header_id,
@@ -37,7 +37,7 @@ class ExperimentParser(Parser):
     def empty(self, p):
         pass
 
-    @_("DEF ID COLON")
+    @_("DEF ID")
     def header_id(self, p):
         return p.ID
 
