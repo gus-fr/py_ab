@@ -21,6 +21,14 @@ class PythonCodeGen:
         self._newline = "\n"
         self._indent_depth = 0
 
+    @property
+    def local_vars(self):
+        return sorted(self._local_vars)
+
+    @property
+    def conditional_ids(self):
+        return sorted(self._conditional_ids )
+
     def render_topline(self) -> str:
         """imports et.al"""
         return (
@@ -43,7 +51,7 @@ class PythonCodeGen:
         if self._experiment_ast.splitting_fields:
             for var in self._experiment_ast.splitting_fields:
                 self._local_vars.add(var)
-            fields_def = f"''.join([{', '.join(self._local_vars)}])"
+            fields_def = f"''.join([{', '.join(self.local_vars)}])"
 
         if len(fields_def) == 0:
             composite_key = "None"
@@ -52,11 +60,11 @@ class PythonCodeGen:
 
         # generate conditional defn
         variant_fn_body = self._generate_conditionals(self._experiment_ast.conditions)
-        variant_fn_signature = f"def choose_experiment_variant({', '.join(self._conditional_ids)}):{self._newline}"
-        variable_assignment = ", ".join([f"{id}={id}" for id in self._conditional_ids])
+        variant_fn_signature = f"def choose_experiment_variant({', '.join(self.conditional_ids)}):{self._newline}"
+        variable_assignment = ", ".join([f"{id}={id}" for id in self.conditional_ids])
         function_call = f"{self.indent()}return choose_experiment_variant({variable_assignment})({composite_key}){self._newline}"
 
-        fn_defn = f"def {self._experiment_ast.id}({', '.join(self._local_vars.union(self._conditional_ids))}):{self._newline}"
+        fn_defn = f"def {self._experiment_ast.id}({', '.join(self.local_vars+self.conditional_ids)}):{self._newline}"
         return f"{self.render_topline()}{fn_defn}{function_call}{variant_fn_signature}{variant_fn_body}"
 
     def _generate_conditionals(
