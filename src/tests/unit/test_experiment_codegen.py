@@ -2,7 +2,7 @@ from pathlib import Path
 
 import pytest
 
-from pyab_experiment.utils.wraper_functions import parse
+from pyab_experiment.utils.wraper_functions import generate_code
 
 
 @pytest.mark.parametrize(
@@ -16,10 +16,10 @@ from pyab_experiment.utils.wraper_functions import parse
         "conditional.pyab",
     ],
 )
-def test_parsable_programs(file_name):
-    """all files should parse withour syntaxerrors"""
+def test_generator(file_name):
+    """all files should generate some code without problems"""
     with open(
         f"{Path(__file__).absolute().parent}/test_programs/{file_name}", "r"
     ) as fp:
-        ast = parse(fp.read())
-        assert ast is not None
+        python_code = generate_code(fp.read())
+        assert python_code is not None
