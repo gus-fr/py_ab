@@ -1,0 +1,5 @@
+def experiment_w_splitters{
+        //some splitter fields
+        splitters: my_fld, my_fld_1
+        return "Setting 1" weighted 0.5, "Setting 2" weighted 0.5
+}

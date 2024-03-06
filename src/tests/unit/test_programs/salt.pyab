@@ -1,0 +1,5 @@
+def experiment_w_salt{
+        // an optional salt (must come before splitting fields)
+        salt: "csdvs887"
+        return "Setting 1" weighted 0.5, "Setting 2" weighted 0.5
+}
