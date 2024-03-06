@@ -13,7 +13,7 @@ from pyab_experiment.parser import parse
         "full_grammar.pyab",
         "salt.pyab",
         "splitters.pyab",
-        "conditional.pyab"
+        "conditional.pyab",
     ],
 )
 def test_parsable_programs(file_name):

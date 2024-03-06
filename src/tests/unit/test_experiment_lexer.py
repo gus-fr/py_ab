@@ -13,7 +13,7 @@ from pyab_experiment.language.lexer import ExperimentLexer
         "full_grammar.pyab",
         "salt.pyab",
         "splitters.pyab",
-        "conditional.pyab"
+        "conditional.pyab",
     ],
 )
 def test_lexer(file_name):
@@ -22,4 +22,4 @@ def test_lexer(file_name):
         f"{Path(__file__).absolute().parent}/test_programs/{file_name}", "r"
     ) as fp:
         lexer = ExperimentLexer()
-        assert len([token for token in lexer.tokenize(fp.read())])>0
+        assert len([token for token in lexer.tokenize(fp.read())]) > 0
