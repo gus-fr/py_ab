@@ -26,6 +26,12 @@ class BooleanOperatorEnum(Enum):
     NOT = auto()
 
 
+class ConditionalType(Enum):
+    IF = auto()
+    ELIF = auto()
+    ELSE = auto()
+
+
 class ExperimentGroup(BaseModel):
     group_definition: Union[float, int, str]
     group_weight: Union[NonNegativeFloat, NonNegativeInt]
@@ -48,7 +54,8 @@ class RecursivePredicate(BaseModel):
 
 
 class ExperimentConditional(BaseModel):
-    predicate: Union[TerminalPredicate, RecursivePredicate]
+    conditional_type: ConditionalType
+    predicate: Union[TerminalPredicate, RecursivePredicate, None]
     true_branch: Union[list[ExperimentGroup], "ExperimentConditional"]
     false_branch: Union[list[ExperimentGroup], "ExperimentConditional", None]
 
