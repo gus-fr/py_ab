@@ -3,10 +3,11 @@ Module that houses the abstract syntax tree (AST) representation of an experimen
 It's a collection of pydantic classes that represent a tree with several specialized nodes
 each representing a specific data structure of the experiment
 """
+from enum import Enum, auto
 from typing import Callable, Union
 
 from pydantic import BaseModel, NonNegativeFloat, NonNegativeInt
-from enum import Enum,auto
+
 
 class LogicalOperatorEnum(Enum):
     EQ = auto()
@@ -18,13 +19,15 @@ class LogicalOperatorEnum(Enum):
     IN = auto()
     NOT_IN = auto()
 
+
 class BooleanOperatorEnum(Enum):
     AND = auto()
     OR = auto()
     NOT = auto()
 
+
 class ExperimentGroup(BaseModel):
-    group_definition: Union[int, float, str]
+    group_definition: Union[float, int, str]
     group_weight: Union[NonNegativeFloat, NonNegativeInt]
 
 
@@ -33,9 +36,9 @@ class Identifier(BaseModel):
 
 
 class TerminalPredicate(BaseModel):
-    left_term: Union[int, float, str, tuple, Identifier]
+    left_term: Union[float, int, str, tuple, Identifier]
     logical_operator: LogicalOperatorEnum
-    right_term: Union[int, float, str, tuple, Identifier]
+    right_term: Union[float, int, str, tuple, Identifier]
 
 
 class RecursivePredicate(BaseModel):

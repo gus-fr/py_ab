@@ -1,17 +1,16 @@
 from sly import Parser
 
 from pyab_experiment.data_structures.syntax_tree import (
+    BooleanOperatorEnum,
     ExperimentAST,
     ExperimentConditional,
     ExperimentGroup,
     Identifier,
+    LogicalOperatorEnum,
     RecursivePredicate,
     TerminalPredicate,
-    LogicalOperatorEnum,
-    BooleanOperatorEnum
 )
 from pyab_experiment.language.lexer import ExperimentLexer
-
 
 
 class ExperimentParser(Parser):
