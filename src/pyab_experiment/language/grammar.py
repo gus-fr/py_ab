@@ -1,17 +1,17 @@
 from sly import Parser
 
 from pyab_experiment.data_structures.syntax_tree import (
+    BooleanOperatorEnum,
+    ConditionalType,
     ExperimentAST,
     ExperimentConditional,
     ExperimentGroup,
     Identifier,
+    LogicalOperatorEnum,
     RecursivePredicate,
     TerminalPredicate,
-    LogicalOperatorEnum,
-    BooleanOperatorEnum
 )
 from pyab_experiment.language.lexer import ExperimentLexer
-
 
 
 class ExperimentParser(Parser):
@@ -69,6 +69,7 @@ class ExperimentParser(Parser):
     @_("IF predicate LBRACE conditional RBRACE subconditional ")
     def conditional(self, p):
         return ExperimentConditional(
+            conditional_type=ConditionalType.IF,
             predicate=p.predicate,
             true_branch=p.conditional,
             false_branch=p.subconditional,
@@ -82,6 +83,7 @@ class ExperimentParser(Parser):
     @_("ELIF predicate LBRACE conditional RBRACE subconditional")
     def subconditional(self, p):
         return ExperimentConditional(
+            conditional_type=ConditionalType.ELIF,
             predicate=p.predicate,
             true_branch=p.conditional,
             false_branch=p.subconditional,
@@ -89,7 +91,12 @@ class ExperimentParser(Parser):
 
     @_("ELSE LBRACE conditional RBRACE")
     def subconditional(self, p):
-        return p.conditional
+        return ExperimentConditional(
+            conditional_type=ConditionalType.ELSE,
+            predicate=None,
+            true_branch=p.conditional,
+            false_branch=None,
+        )
 
     @_("empty")
     def subconditional(self, p):

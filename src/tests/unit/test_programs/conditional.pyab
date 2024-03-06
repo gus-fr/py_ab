@@ -1,0 +1,22 @@
+
+def basic_experiment{
+        if field1=='a'{
+                if field2 == 'b'{
+                        return "group 1.1" weighted 1
+                }
+                else if field2 == 'c'{
+                        return "group 1.2" weighted 1
+                }
+        }
+        else if field1 == 'b'{
+                if field2=='b1'{
+                        return "group 2.1" weighted 1
+                }
+        }
+        else if field1 == 'c'{
+                return "group 3" weighted 1
+        }
+        else{
+                return "default" weighted 1
+        }
+}
