@@ -3,6 +3,7 @@ from pyab_experiment.data_structures.syntax_tree import ExperimentAST
 from pyab_experiment.language.grammar import ExperimentParser
 from pyab_experiment.language.lexer import ExperimentLexer
 from pyab_experiment.codegen.python.python_generator import PythonCodeGen
+from black import format_str, FileMode
 
 
 def parse(text: str) -> ExperimentAST:
@@ -16,5 +17,5 @@ def generate_code(text:str)->str:
     function comes out"""
 
     generator = PythonCodeGen(parse(text))
-    return generator.generate()
+    return format_str(generator.generate(), mode=FileMode())
 
