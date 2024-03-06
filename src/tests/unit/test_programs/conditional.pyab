@@ -10,7 +10,7 @@ def basic_experiment{
         }
         else if field1 == 'b'{
                 if field2=='b1'{
-                        return "group 2" weighted 1
+                        return "group 2.1" weighted 1
                 }
         }
         else if field1 == 'c'{
