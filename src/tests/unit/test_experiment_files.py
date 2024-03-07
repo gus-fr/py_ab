@@ -3,8 +3,8 @@ from pathlib import Path
 
 import pytest
 
-from pyab_experiment.utils.wraper_functions import generate_code,parse_source
 from pyab_experiment.language.lexer import ExperimentLexer
+from pyab_experiment.utils.wraper_functions import generate_code, parse_source
 
 files_to_test = [
     "basic_experiment.pyab",

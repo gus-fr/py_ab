@@ -76,12 +76,16 @@ class PythonCodeGen:
 
         variant_fn_body = self._generate_conditionals(self._experiment_ast.conditions)
         variable_assignment = ", ".join([f"{id}={id}" for id in self.conditional_ids])
-        function_call = f"{self.indent()}return choose_experiment_variant({variable_assignment})({composite_key}){self._newline}"
 
         self._indent_depth -= 1
+        function_call = f"{self.indent()}return choose_experiment_variant({variable_assignment})({composite_key}){self._newline}"
         variant_fn_signature = f"{self.indent()}def choose_experiment_variant({', '.join(self.conditional_ids)}):{self._newline}"
-        fn_defn = f"{self.indent()}def {self._experiment_ast.id}({', '.join(self.local_vars+self.conditional_ids)}):{self._newline}"
-        return f"{self.render_topline()}{fn_defn}{function_call}{variant_fn_signature}{variant_fn_body}"
+        fn_defn = f"def {self._experiment_ast.id}({', '.join(self.local_vars+self.conditional_ids)}):{self._newline}"
+
+        if self._expose_fn:
+            return f"{self.render_topline()}{fn_defn}{function_call}{variant_fn_signature}{variant_fn_body}"
+        else:
+            return f"{self.render_topline()}{fn_defn}{variant_fn_signature}{variant_fn_body}{function_call}"
 
     def _generate_conditionals(
         self, condition: ExperimentConditional | list[ExperimentGroup]
