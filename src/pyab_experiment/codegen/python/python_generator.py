@@ -83,7 +83,7 @@ class PythonCodeGen:
         self._indent_depth = 1
         function_call = f"{self.indent()}return choose_experiment_variant({variable_assignment})({composite_key}){self._newline}"
 
-        fn_defn = f"def {self._experiment_ast.id}({', '.join(self.local_vars+self.conditional_ids)}):{self._newline}"
+        fn_defn = f"def {self._experiment_ast.id}({', '.join(self.local_vars+self.conditional_ids+['**kwargs'])}):{self._newline}"
 
         if self._expose_fn:
             return f"{self.render_topline()}{fn_defn}{function_call}{variant_fn_signature}{variant_fn_body}"
