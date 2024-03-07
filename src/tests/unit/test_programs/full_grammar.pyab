@@ -23,8 +23,8 @@ def complex_experiment_defn{
 
             // Return statements are probabilistic by nature
             // the weight defines the relative frequency of seeing one setting vs others
-            return 123 weighted 3.4,
-                    9.3 weighted 5,
+            return  "123" weighted 3.4,
+                    "9.3" weighted 5,
                     "abc" weighted 3 /* like in C, embedded, multiline
                     block comment also works */
         }
