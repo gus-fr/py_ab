@@ -78,8 +78,11 @@ class PythonCodeGen:
         variable_assignment = ", ".join([f"{id}={id}" for id in self.conditional_ids])
 
         self._indent_depth -= 1
-        function_call = f"{self.indent()}return choose_experiment_variant({variable_assignment})({composite_key}){self._newline}"
         variant_fn_signature = f"{self.indent()}def choose_experiment_variant({', '.join(self.conditional_ids)}):{self._newline}"
+
+        self._indent_depth = 1
+        function_call = f"{self.indent()}return choose_experiment_variant({variable_assignment})({composite_key}){self._newline}"
+
         fn_defn = f"def {self._experiment_ast.id}({', '.join(self.local_vars+self.conditional_ids)}):{self._newline}"
 
         if self._expose_fn:
