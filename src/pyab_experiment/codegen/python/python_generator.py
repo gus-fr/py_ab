@@ -13,6 +13,10 @@ from pyab_experiment.language.grammar import (
 
 
 class PythonCodeGen:
+    """class that holds intermediate state (e.g indentation level, variable names)
+    while generating code
+    """
+
     def __init__(self, experiment_ast: ExperimentAST, indentation_char: str = "\t"):
         self._experiment_ast = experiment_ast
         self._local_vars = set()
@@ -27,7 +31,7 @@ class PythonCodeGen:
 
     @property
     def conditional_ids(self):
-        return sorted(self._conditional_ids )
+        return sorted(self._conditional_ids)
 
     def render_topline(self) -> str:
         """imports et.al"""
@@ -41,6 +45,7 @@ class PythonCodeGen:
         return "".join([self._indentation_char * self._indent_depth])
 
     def generate(self) -> str:
+        """main method. Does a DFS on the syntax tree rendering code as it traverses the nodes"""
         self._indent_depth += 1
         salt_def = (
             f"'{self._experiment_ast.salt}'"
