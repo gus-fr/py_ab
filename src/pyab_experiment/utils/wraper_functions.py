@@ -19,6 +19,6 @@ def generate_code(text: str) -> str:
     function comes out"""
 
     generator = PythonCodeGen(
-        parse_source(text), expose_experiment_variant_function=True
+        parse_source(text), expose_experiment_variant_function=False
     )
     return format_str(generator.generate(), mode=FileMode())
