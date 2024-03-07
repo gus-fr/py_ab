@@ -44,7 +44,6 @@ class ExperimentEvaluator:
             setattr(
                 self, "run_experiment", code_holder[fn_name]
             )  # initialize the function
-            print(dir(self))
 
     def run_experiment(self, **kwargs):
         raise RuntimeError("Code was not loaded")
