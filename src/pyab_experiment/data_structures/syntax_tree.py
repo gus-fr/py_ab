@@ -33,7 +33,7 @@ class ConditionalType(Enum):
 
 
 class ExperimentGroup(BaseModel):
-    group_definition: Union[float, int, str]
+    group_definition: str
     group_weight: Union[NonNegativeFloat, NonNegativeInt]
 
 

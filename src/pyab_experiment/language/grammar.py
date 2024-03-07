@@ -204,7 +204,9 @@ class ExperimentParser(Parser):
 
     @_("STRING_LITERAL WEIGHTED weight")
     def return_statement(self, p):
-        return [ExperimentGroup(group_definition=p.STRING_LITERAL, group_weight=p.weight)]
+        return [
+            ExperimentGroup(group_definition=p.STRING_LITERAL, group_weight=p.weight)
+        ]
 
     @_("STRING_LITERAL WEIGHTED weight COMMA return_statement")
     def return_statement(self, p):
