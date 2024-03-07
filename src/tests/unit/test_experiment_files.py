@@ -14,6 +14,7 @@ files_to_test = [
     "salt.pyab",
     "splitters.pyab",
     "conditional.pyab",
+    "conditional_test_1.pyab",
 ]
 
 
