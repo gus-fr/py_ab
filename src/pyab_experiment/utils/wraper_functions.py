@@ -18,6 +18,7 @@ def generate_code(text: str) -> str:
     high level spec comes in and python
     function comes out"""
 
-    generator = PythonCodeGen(parse_source(text))
+    generator = PythonCodeGen(
+        parse_source(text), expose_experiment_variant_function=True
+    )
     return format_str(generator.generate(), mode=FileMode())
-

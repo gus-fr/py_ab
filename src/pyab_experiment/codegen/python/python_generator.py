@@ -17,13 +17,19 @@ class PythonCodeGen:
     while generating code
     """
 
-    def __init__(self, experiment_ast: ExperimentAST, indentation_char: str = "\t"):
+    def __init__(
+        self,
+        experiment_ast: ExperimentAST,
+        indentation_char: str = "\t",
+        expose_experiment_variant_function: bool = True,
+    ):
         self._experiment_ast = experiment_ast
         self._local_vars = set()
         self._conditional_ids = set()  # to save conditional variables seen
         self._indentation_char = indentation_char
         self._newline = "\n"
         self._indent_depth = 0
+        self._expose_fn = expose_experiment_variant_function
 
     @property
     def local_vars(self):
@@ -46,7 +52,6 @@ class PythonCodeGen:
 
     def generate(self) -> str:
         """main method. Does a DFS on the syntax tree rendering code as it traverses the nodes"""
-        self._indent_depth += 1
         salt_def = (
             f"'{self._experiment_ast.salt}'"
             if self._experiment_ast.salt is not None
@@ -63,13 +68,19 @@ class PythonCodeGen:
         else:
             composite_key = f"{salt_def}+{fields_def}"
 
-        # generate conditional defn
+        # either we define a function inside the main fn, or at the root
+        if self._expose_fn:
+            self._indent_depth = 1
+        else:
+            self._indent_depth = 2
+
         variant_fn_body = self._generate_conditionals(self._experiment_ast.conditions)
-        variant_fn_signature = f"def choose_experiment_variant({', '.join(self.conditional_ids)}):{self._newline}"
         variable_assignment = ", ".join([f"{id}={id}" for id in self.conditional_ids])
         function_call = f"{self.indent()}return choose_experiment_variant({variable_assignment})({composite_key}){self._newline}"
 
-        fn_defn = f"def {self._experiment_ast.id}({', '.join(self.local_vars+self.conditional_ids)}):{self._newline}"
+        self._indent_depth -= 1
+        variant_fn_signature = f"{self.indent()}def choose_experiment_variant({', '.join(self.conditional_ids)}):{self._newline}"
+        fn_defn = f"{self.indent()}def {self._experiment_ast.id}({', '.join(self.local_vars+self.conditional_ids)}):{self._newline}"
         return f"{self.render_topline()}{fn_defn}{function_call}{variant_fn_signature}{variant_fn_body}"
 
     def _generate_conditionals(
