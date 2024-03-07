@@ -13,13 +13,31 @@ from pyab_experiment.language.grammar import (
 
 
 class PythonCodeGen:
-    def __init__(self, experiment_ast: ExperimentAST, indentation_char: str = "\t"):
+    """class that holds intermediate state (e.g indentation level, variable names)
+    while generating code
+    """
+
+    def __init__(
+        self,
+        experiment_ast: ExperimentAST,
+        indentation_char: str = "\t",
+        expose_experiment_variant_function: bool = True,
+    ):
         self._experiment_ast = experiment_ast
         self._local_vars = set()
         self._conditional_ids = set()  # to save conditional variables seen
         self._indentation_char = indentation_char
         self._newline = "\n"
         self._indent_depth = 0
+        self._expose_fn = expose_experiment_variant_function
+
+    @property
+    def local_vars(self):
+        return sorted(self._local_vars)
+
+    @property
+    def conditional_ids(self):
+        return sorted(self._conditional_ids)
 
     def render_topline(self) -> str:
         """imports et.al"""
@@ -33,7 +51,7 @@ class PythonCodeGen:
         return "".join([self._indentation_char * self._indent_depth])
 
     def generate(self) -> str:
-        self._indent_depth += 1
+        """main method. Does a DFS on the syntax tree rendering code as it traverses the nodes"""
         salt_def = (
             f"'{self._experiment_ast.salt}'"
             if self._experiment_ast.salt is not None
@@ -43,21 +61,34 @@ class PythonCodeGen:
         if self._experiment_ast.splitting_fields:
             for var in self._experiment_ast.splitting_fields:
                 self._local_vars.add(var)
-            fields_def = f"''.join([{', '.join(self._local_vars)}])"
+            fields_def = f"''.join([{', '.join(self.local_vars)}])"
 
         if len(fields_def) == 0:
             composite_key = "None"
         else:
             composite_key = f"{salt_def}+{fields_def}"
 
-        # generate conditional defn
+        # either we define a function inside the main fn, or at the root
+        if self._expose_fn:
+            self._indent_depth = 1
+        else:
+            self._indent_depth = 2
+
         variant_fn_body = self._generate_conditionals(self._experiment_ast.conditions)
-        variant_fn_signature = f"def choose_experiment_variant({', '.join(self._conditional_ids)}):{self._newline}"
-        variable_assignment = ", ".join([f"{id}={id}" for id in self._conditional_ids])
+        variable_assignment = ", ".join([f"{id}={id}" for id in self.conditional_ids])
+
+        self._indent_depth -= 1
+        variant_fn_signature = f"{self.indent()}def choose_experiment_variant({', '.join(self.conditional_ids)}):{self._newline}"
+
+        self._indent_depth = 1
         function_call = f"{self.indent()}return choose_experiment_variant({variable_assignment})({composite_key}){self._newline}"
 
-        fn_defn = f"def {self._experiment_ast.id}({', '.join(self._local_vars.union(self._conditional_ids))}):{self._newline}"
-        return f"{self.render_topline()}{fn_defn}{function_call}{variant_fn_signature}{variant_fn_body}"
+        fn_defn = f"def {self._experiment_ast.id}({', '.join(self.local_vars+self.conditional_ids+['**kwargs'])}):{self._newline}"
+
+        if self._expose_fn:
+            return f"{self.render_topline()}{fn_defn}{function_call}{variant_fn_signature}{variant_fn_body}"
+        else:
+            return f"{self.render_topline()}{fn_defn}{variant_fn_signature}{variant_fn_body}{function_call}"
 
     def _generate_conditionals(
         self, condition: ExperimentConditional | list[ExperimentGroup]
