@@ -13,12 +13,12 @@ def parse_source(text: str) -> ExperimentAST:
     return parser.parse(lexer.tokenize(text))
 
 
-def generate_code(text: str) -> str:
+def generate_code(text: str, expose_internal_fn: bool = False) -> str:
     """end to end code generation
     high level spec comes in and python
     function comes out"""
 
     generator = PythonCodeGen(
-        parse_source(text), expose_experiment_variant_function=False
+        parse_source(text), expose_experiment_variant_function=expose_internal_fn
     )
     return format_str(generator.generate(), mode=FileMode())
