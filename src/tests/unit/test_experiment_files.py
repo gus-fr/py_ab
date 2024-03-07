@@ -15,6 +15,7 @@ files_to_test = [
     "splitters.pyab",
     "conditional.pyab",
     "conditional_test_1.pyab",
+    "splitter_test.pyab",
 ]
 
 

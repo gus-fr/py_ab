@@ -43,3 +43,28 @@ def test_conditional_1():
     assert group_ctr["G2-5"] == 4000
     assert group_ctr["G6+"] == 4000
     assert group_ctr["default_grp"] == 0  # to test all data points have been assigned
+
+
+def test_splitter_test():
+    """
+    file has simple definition that conditions the weights of the splitter
+    """
+    experiment = load_experiment("splitter_test.pyab")
+    group_ctr_a = Counter()
+    group_ctr_other = Counter()
+    trials = 10000
+    for datapoint in sample_data(trials):
+        group_ctr_a[experiment(my_id=datapoint.get("groupping_id"), field_1="a")] += 1
+        group_ctr_other[
+            experiment(my_id=datapoint.get("groupping_id"), field_1="sth_else")
+        ] += 1
+
+    (low_estimate, hi_estimate) = confidence_interval(trials, p=4 / 5, confidence=0.999)
+    assert low_estimate <= group_ctr_a["Setting 1"] / trials <= hi_estimate
+    (low_estimate, hi_estimate) = confidence_interval(trials, p=1 / 5, confidence=0.999)
+    assert low_estimate <= group_ctr_a["Setting 2"] / trials <= hi_estimate
+
+    (low_estimate, hi_estimate) = confidence_interval(trials, p=1 / 2, confidence=0.999)
+    assert low_estimate <= group_ctr_other["Setting 1"] / trials <= hi_estimate
+    (low_estimate, hi_estimate) = confidence_interval(trials, p=1 / 2, confidence=0.999)
+    assert low_estimate <= group_ctr_other["Setting 2"] / trials <= hi_estimate

@@ -1,0 +1,10 @@
+def basic_experiment_1{
+        //some splitter fields
+        splitters: my_id
+        if field_1 == 'a'{
+                return "Setting 1" weighted 4, "Setting 2" weighted 1
+        }
+        else{
+                return "Setting 1" weighted 1, "Setting 2" weighted 1
+        }
+}
