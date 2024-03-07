@@ -1,4 +1,5 @@
-"""test the parsing, lexing, and codegen"""
+"""test the parsing, lexing, and codegen of the sample files created
+the test only checks for errors, not the logic itself"""
 from pathlib import Path
 
 import pytest
