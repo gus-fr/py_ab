@@ -3,6 +3,7 @@ Module that houses the abstract syntax tree (AST) representation of an experimen
 It's a collection of pydantic classes that represent a tree with several specialized nodes
 each representing a specific data structure of the experiment
 """
+
 from enum import Enum, auto
 from typing import Callable, Union
 

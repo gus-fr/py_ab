@@ -1,4 +1,4 @@
-from sly import Lexer
+from pyab_experiment.sly import Lexer
 
 """_summary_
 Defines the lexer for the experiment language definition
@@ -108,6 +108,7 @@ class ExperimentLexer(Lexer):
     # Ignored pattern
     ignore_newline = r"\n+"
     ignore_ws = r"\s+"
+
     # Extra action for newlines
     def ignore_newline(self, t):
         self.lineno += t.value.count("\n")
@@ -131,6 +132,7 @@ class BlockComment(Lexer):
         pass
 
     ignore_newline = r"\n+"
+
     # Extra action for newlines
     def ignore_newline(self, t):
         self.lineno += t.value.count("\n")

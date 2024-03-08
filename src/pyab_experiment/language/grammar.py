@@ -1,5 +1,3 @@
-from sly import Parser
-
 from pyab_experiment.data_structures.syntax_tree import (
     BooleanOperatorEnum,
     ConditionalType,
@@ -12,6 +10,7 @@ from pyab_experiment.data_structures.syntax_tree import (
     TerminalPredicate,
 )
 from pyab_experiment.language.lexer import ExperimentLexer
+from pyab_experiment.sly import Parser
 
 
 class ExperimentParser(Parser):
