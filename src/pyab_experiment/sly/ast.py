@@ -2,8 +2,7 @@
 import sys
 
 
-class AST(object):
-
+class AST:
     @classmethod
     def __init_subclass__(cls, **kwargs):
         mod = sys.modules[cls.__module__]

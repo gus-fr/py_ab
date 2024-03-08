@@ -78,7 +78,7 @@ class LexerStateChange(Exception):
         self.tok = tok
 
 
-class Token(object):
+class Token:
     """
     Representation of a single token.
     """

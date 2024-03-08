@@ -64,7 +64,7 @@ MAXINT = sys.maxsize
 # it into SLY.
 
 
-class SlyLogger(object):
+class SlyLogger:
     def __init__(self, f):
         self.f = f
 
@@ -203,7 +203,7 @@ class YaccProduction:
 # -----------------------------------------------------------------------------
 
 
-class Production(object):
+class Production:
     reduced = 0
 
     def __init__(
@@ -269,7 +269,7 @@ class Production(object):
 
     def __str__(self):
         if self.prod:
-            s = "%s -> %s" % (self.name, " ".join(self.prod))
+            s = "{} -> {}".format(self.name, " ".join(self.prod))
         else:
             s = f"{self.name} -> <empty>"
 
@@ -333,7 +333,7 @@ class Production(object):
 # -----------------------------------------------------------------------------
 
 
-class LRItem(object):
+class LRItem:
     def __init__(self, p, n):
         self.name = p.name
         self.prod = list(p.prod)
@@ -347,7 +347,7 @@ class LRItem(object):
 
     def __str__(self):
         if self.prod:
-            s = "%s -> %s" % (self.name, " ".join(self.prod))
+            s = "{} -> {}".format(self.name, " ".join(self.prod))
         else:
             s = f"{self.name} -> <empty>"
         return s
@@ -383,7 +383,7 @@ class GrammarError(YaccError):
     pass
 
 
-class Grammar(object):
+class Grammar:
     def __init__(self, terminals):
         self.Productions = [None]  # A list of all of the productions.  The first
         # entry is always reserved for the purpose of
@@ -517,7 +517,7 @@ class Grammar(object):
             prodprec = self.Precedence.get(precname, ("right", 0))
 
         # See if the rule is already in the rulemap
-        map = "%s -> %s" % (prodname, syms)
+        map = f"{prodname} -> {syms}"
         if map in self.Prodmap:
             m = self.Prodmap[map]
             raise GrammarError(
@@ -993,7 +993,7 @@ class LALRError(YaccError):
 # -----------------------------------------------------------------------------
 
 
-class LRTable(object):
+class LRTable:
     def __init__(self, grammar):
         self.grammar = grammar
 
@@ -2068,7 +2068,7 @@ class Parser(metaclass=ParserMeta):
 
         unused_prec = grammar.unused_precedence()
         for term, assoc in unused_prec:
-            errors += "Precedence rule %r defined for unknown symbol %r\n" % (
+            errors += "Precedence rule {!r} defined for unknown symbol {!r}\n".format(
                 assoc,
                 term,
             )
