@@ -1,8 +1,9 @@
-"""Assuming we are able to generate code, test that the logic of the generated code works"""
+"""
+Assuming we are able to generate code,
+test that the logic of the generated code works
+"""
 from collections import Counter
 from pathlib import Path
-
-import pytest
 
 from pyab_experiment.experiment_evaluator import ExperimentEvaluator
 from pyab_experiment.utils.stats import confidence_interval

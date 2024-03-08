@@ -31,6 +31,7 @@
 # OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 # -----------------------------------------------------------------------------
 
+# flake8: noqa
 import inspect
 import sys
 from collections import Counter, OrderedDict, defaultdict
