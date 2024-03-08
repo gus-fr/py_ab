@@ -12,7 +12,7 @@ class DocParseMeta(type):
     allows Python classes to be defined with alternative syntax.
     To use this class, you first need to define a lexer and parser:
 
-        from pyab_experiment.sly import Lexer, Parser
+        from sly import Lexer, Parser
         class MyLexer(Lexer):
            ...
 

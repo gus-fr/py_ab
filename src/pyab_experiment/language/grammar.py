@@ -1,3 +1,6 @@
+"""Grammar definition for our AP experiment language"""
+
+# flake8: noqa
 from pyab_experiment.data_structures.syntax_tree import (
     BooleanOperatorEnum,
     ConditionalType,
