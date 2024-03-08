@@ -10,9 +10,7 @@ from pyab_experiment.utils.stats import confidence_interval
 
 
 def load_experiment(file_name):
-    with open(
-        f"{Path(__file__).absolute().parent}/test_programs/{file_name}", "r"
-    ) as fp:
+    with open(f"{Path(__file__).absolute().parent}/test_programs/{file_name}") as fp:
         return ExperimentEvaluator(fp.read())
 
 
