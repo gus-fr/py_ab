@@ -9,6 +9,7 @@ description = "Pythonic AB Experiment Framework"
 authors = ["gus-fr <gustavo_frigo@hotmail.com>"]
 readme = "README.md"
 repository = "https://github.com/gus-fr/py_ab"
+license = "GPL-3.0-or-later"
 packages = [
     {include = "pyab_experiment", from = "src"}
 ]
