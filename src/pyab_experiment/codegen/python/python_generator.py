@@ -54,7 +54,11 @@ class PythonCodeGen:
         return "".join([self._indentation_char * self._indent_depth])
 
     def generate(self) -> str:
-        """main method. Does a DFS on the syntax tree rendering code as it traverses the nodes"""
+        """
+        main method. Does a DFS on the syntax tree rendering
+        code as it traverses the nodes
+        """
+
         salt_def = (
             f"'{self._experiment_ast.salt}'"
             if self._experiment_ast.salt is not None
@@ -81,24 +85,40 @@ class PythonCodeGen:
         variable_assignment = ", ".join([f"{id}={id}" for id in self.conditional_ids])
 
         self._indent_depth -= 1
-        variant_fn_signature = f"{self.indent()}def choose_experiment_variant({', '.join(self.conditional_ids)}):{self._newline}"
+        variant_fn_signature = (
+            f"{self.indent()}def choose_experiment_variant"
+            f"({', '.join(self.conditional_ids)}):{self._newline}"
+        )
 
         self._indent_depth = 1
-        function_call = f"{self.indent()}return choose_experiment_variant({variable_assignment})({composite_key}){self._newline}"
+        function_call = (
+            f"{self.indent()}return choose_experiment_variant"
+            f"({variable_assignment})({composite_key}){self._newline}"
+        )
 
-        fn_defn = f"def {self._experiment_ast.id}({', '.join(self.local_vars+self.conditional_ids+['**kwargs'])}):{self._newline}"
+        fn_defn = (
+            f"def {self._experiment_ast.id}"
+            f"({', '.join(self.local_vars+self.conditional_ids+['**kwargs'])}):"
+            f"{self._newline}"
+        )
 
         if self._expose_fn:
-            return f"{self.render_topline()}{fn_defn}{function_call}{variant_fn_signature}{variant_fn_body}"
+            return (
+                f"{self.render_topline()}{fn_defn}"
+                f"{function_call}{variant_fn_signature}{variant_fn_body}"
+            )
         else:
-            return f"{self.render_topline()}{fn_defn}{variant_fn_signature}{variant_fn_body}{function_call}"
+            return (
+                f"{self.render_topline()}{fn_defn}{variant_fn_signature}"
+                f"{variant_fn_body}{function_call}"
+            )
 
     def _generate_conditionals(
         self, condition: ExperimentConditional | list[ExperimentGroup]
     ) -> str:
-        """generates the (possibly nested) conditional statements, and their return functions
-        goes through through all the contitionals and rendering
-        appropriate function definitions
+        """generates the (possibly nested) conditional statements,
+        and their return functions goes through through all the contitionals
+        and rendering appropriate function definitions
         """
         match condition:
             case ExperimentConditional():
@@ -113,11 +133,20 @@ class PythonCodeGen:
                 )
                 match condition.conditional_type:
                     case ConditionalType.IF:
-                        return f"{self.indent()}if {predicate}:{self._newline}{true_branch_stmt}{false_branch_stmt}"
+                        return (
+                            f"{self.indent()}if {predicate}:"
+                            f"{self._newline}{true_branch_stmt}{false_branch_stmt}"
+                        )
                     case ConditionalType.ELIF:
-                        return f"{self.indent()}elif {predicate}:{self._newline}{true_branch_stmt}{false_branch_stmt}"
+                        return (
+                            f"{self.indent()}elif {predicate}:"
+                            f"{self._newline}{true_branch_stmt}{false_branch_stmt}"
+                        )
                     case ConditionalType.ELSE:
-                        return f"{self.indent()}else:{self._newline}{true_branch_stmt}{false_branch_stmt}"
+                        return (
+                            f"{self.indent()}else:"
+                            f"{self._newline}{true_branch_stmt}{false_branch_stmt}"
+                        )
 
             case [*_]:
                 statement = self._generate_group_return_statement(condition)
