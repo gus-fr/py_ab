@@ -4,7 +4,7 @@ Library that defines a simplified language to set up and generate AB test functi
 # TL;DR
 To get started you can use one of the sample files provided in `src/tests/unit/test_programs`
 These are sample AB test definitions that both serve as unit tests, and provide sample file definitons.
-using the `splitter_test.pyab` definition, which is defined as 
+using the `splitter_test.pyab` definition, which is defined as
 ```
 def basic_experiment_1{
         //some splitter fields
