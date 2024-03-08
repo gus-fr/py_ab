@@ -22,9 +22,7 @@ files_to_test = [
 @pytest.mark.parametrize("file_name", files_to_test)
 def test_generator(file_name):
     """all files should generate some code without problems"""
-    with open(
-        f"/Users/g.frigo/repo/py_ab/tests/unit/test_programs/conditional_test_1.pyab"
-    ) as fp:
+    with open(f"{Path(__file__).absolute().parent}/test_programs/{file_name}") as fp:
         python_code = generate_code(fp.read())
         assert python_code is not None
 
