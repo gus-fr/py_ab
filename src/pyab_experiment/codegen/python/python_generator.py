@@ -87,7 +87,7 @@ class PythonCodeGen:
         self._indent_depth -= 1
         variant_fn_signature = (
             f"{self.indent()}def choose_experiment_variant"
-            f"({', '.join(self.conditional_ids)}):{self._newline}"
+            f"({', '.join(self.conditional_ids)}): {self._newline}"
         )
 
         self._indent_depth = 1
@@ -98,7 +98,7 @@ class PythonCodeGen:
 
         fn_defn = (
             f"def {self._experiment_ast.id}"
-            f"({', '.join(self.local_vars+self.conditional_ids+['**kwargs'])}):"
+            f"({', '.join(self.local_vars+self.conditional_ids+['**kwargs'])}): "
             f"{self._newline}"
         )
 
@@ -134,17 +134,17 @@ class PythonCodeGen:
                 match condition.conditional_type:
                     case ConditionalType.IF:
                         return (
-                            f"{self.indent()}if {predicate}:"
+                            f"{self.indent()}if {predicate}: "
                             f"{self._newline}{true_branch_stmt}{false_branch_stmt}"
                         )
                     case ConditionalType.ELIF:
                         return (
-                            f"{self.indent()}elif {predicate}:"
+                            f"{self.indent()}elif {predicate}: "
                             f"{self._newline}{true_branch_stmt}{false_branch_stmt}"
                         )
                     case ConditionalType.ELSE:
                         return (
-                            f"{self.indent()}else:"
+                            f"{self.indent()}else: "
                             f"{self._newline}{true_branch_stmt}{false_branch_stmt}"
                         )
 
@@ -224,8 +224,12 @@ class PythonCodeGen:
     def _generate_group_return_statement(
         self, group_statement: list[ExperimentGroup]
     ) -> str:
-        """unwrap the experiment group, into a partial function call that applies the splitter logic"""
+        """unwrap the experiment group, into a partial function call
+        that applies the splitter logic"""
 
         population_list = str([group.group_definition for group in group_statement])
         weight_list = str([group.group_weight for group in group_statement])
-        return f"{self.indent()}return partial(deterministic_choice,population={population_list},weights={weight_list}){self._newline}"
+        return (
+            f"{self.indent()}return partial(deterministic_choice, population="
+            f"{population_list}, weights={weight_list}){self._newline}"
+        )
