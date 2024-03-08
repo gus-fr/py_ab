@@ -18,7 +18,10 @@ packages = [
 python = "^3.10"
 black = "^24.2.0"
 pydantic = "^1.10.0"
-sly = "0.5"
+
+[tool.poetry.group.dev.dependencies]
+pytest = "^8.0.2"
+black = "^24.2.0"
 
 [tool.pytest.ini_options]
 pythonpath = [
