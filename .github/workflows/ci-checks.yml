@@ -35,4 +35,4 @@ jobs:
 
 
       - name: Unit test
-        run: PYTHONPATH=./src/pli_api poetry run pytest --cov src --cov-report term
+        run: PYTHONPATH=./src/pyab_experiment poetry run pytest
