@@ -1,5 +1,6 @@
-from sly import Parser
+"""Grammar definition for our AP experiment language"""
 
+# flake8: noqa
 from pyab_experiment.data_structures.syntax_tree import (
     BooleanOperatorEnum,
     ConditionalType,
@@ -12,9 +13,12 @@ from pyab_experiment.data_structures.syntax_tree import (
     TerminalPredicate,
 )
 from pyab_experiment.language.lexer import ExperimentLexer
+from pyab_experiment.sly import Parser
 
 
 class ExperimentParser(Parser):
+    # Uncomment to print updated grammar
+    # debugfile = 'parser.out'
     tokens = ExperimentLexer.tokens
 
     precedence = (
@@ -200,14 +204,16 @@ class ExperimentParser(Parser):
     def return_expr(self, p):
         return p.return_statement
 
-    @_("literal WEIGHTED weight")
-    def return_statement(self, p):
-        return [ExperimentGroup(group_definition=p.literal, group_weight=p.weight)]
-
-    @_("literal WEIGHTED weight COMMA return_statement")
+    @_("STRING_LITERAL WEIGHTED weight")
     def return_statement(self, p):
         return [
-            ExperimentGroup(group_definition=p.literal, group_weight=p.weight)
+            ExperimentGroup(group_definition=p.STRING_LITERAL, group_weight=p.weight)
+        ]
+
+    @_("STRING_LITERAL WEIGHTED weight COMMA return_statement")
+    def return_statement(self, p):
+        return [
+            ExperimentGroup(group_definition=p.STRING_LITERAL, group_weight=p.weight)
         ] + p.return_statement
 
     # weights

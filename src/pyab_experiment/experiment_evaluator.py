@@ -1,9 +1,13 @@
 import hashlib
-from functools import partial
+from functools import partial  # noqa: F401
 
-from pyab_experiment.binning.binning import deterministic_choice
+from pyab_experiment.binning.binning import deterministic_choice  # noqa: F401
 from pyab_experiment.codegen.python.python_generator import PythonCodeGen
 from pyab_experiment.utils.wraper_functions import parse_source
+
+# Note the noqa 401's ignoring the imported, not used
+# we are loading dynamic code that needs this libraries. so they are used
+# but flake can't know about it by looking at the static files
 
 
 class ExperimentEvaluator:
@@ -11,11 +15,12 @@ class ExperimentEvaluator:
     compile it, and generate the python functions.
     These functions are then set inside the class to expose them to the outside world
 
-    The advantage is that we can easily load new source code at runtime, while keeping tabs of
-    it's checksum to avoid re-compiling the same source file multiple times.
-    Also since the class manages the source code & compilation it avoids calls to exec from
-    unknown sources, since the code is self generated from the source file that follows a strict grammar
-    takes a source code file, generates the python functions and plugs them into the class
+    The advantage is that we can easily load new source code at runtime, while keeping
+    tabs of it's checksum to avoid re-compiling the same source file multiple times.
+    Also since the class manages the source code & compilation it avoids calls to exec
+    from unknown sources, since the code is self generated from the source file that
+    follows a strict grammar takes a source code file, generates the python functions
+    and plugs them into the class
     """
 
     _checksum: str = ""

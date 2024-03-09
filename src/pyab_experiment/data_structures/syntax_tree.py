@@ -1,10 +1,11 @@
-"""_summary_
-Module that houses the abstract syntax tree (AST) representation of an experiment
-It's a collection of pydantic classes that represent a tree with several specialized nodes
-each representing a specific data structure of the experiment
 """
+Module that houses the abstract syntax tree (AST) representation of an experiment
+It's a collection of pydantic classes that represent a tree with several
+specialized nodes each representing a specific data structure of the experiment
+"""
+
 from enum import Enum, auto
-from typing import Callable, Union
+from typing import Union
 
 from pydantic import BaseModel, NonNegativeFloat, NonNegativeInt
 
@@ -33,7 +34,7 @@ class ConditionalType(Enum):
 
 
 class ExperimentGroup(BaseModel):
-    group_definition: Union[float, int, str]
+    group_definition: str
     group_weight: Union[NonNegativeFloat, NonNegativeInt]
 
 

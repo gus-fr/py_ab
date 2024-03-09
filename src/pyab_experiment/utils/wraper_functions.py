@@ -1,4 +1,5 @@
 """parsing module"""
+
 from black import FileMode, format_str
 
 from pyab_experiment.codegen.python.python_generator import PythonCodeGen

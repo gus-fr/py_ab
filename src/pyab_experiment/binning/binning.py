@@ -1,4 +1,5 @@
 """module that has the group splitting functions"""
+
 import hashlib
 from bisect import bisect
 from itertools import accumulate

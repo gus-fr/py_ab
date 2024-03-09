@@ -1,6 +1,7 @@
 """_summary_
 tiny module to define custom operators
 """
+
 import operator
 from typing import Container
 

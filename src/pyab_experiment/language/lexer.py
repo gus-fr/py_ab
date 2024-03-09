@@ -1,5 +1,3 @@
-from sly import Lexer
-
 """_summary_
 Defines the lexer for the experiment language definition
 defines common constricts such as operators, identifiers, and common literals (floats, ints)
@@ -7,6 +5,9 @@ also defines reserved keywords to be used by the grammar.
 
 uses YACC (via the sly implementation) the heavy FSA lifting
 """
+
+# flake8: noqa
+from pyab_experiment.sly import Lexer
 
 
 class ExperimentLexer(Lexer):
@@ -108,6 +109,7 @@ class ExperimentLexer(Lexer):
     # Ignored pattern
     ignore_newline = r"\n+"
     ignore_ws = r"\s+"
+
     # Extra action for newlines
     def ignore_newline(self, t):
         self.lineno += t.value.count("\n")
@@ -131,6 +133,7 @@ class BlockComment(Lexer):
         pass
 
     ignore_newline = r"\n+"
+
     # Extra action for newlines
     def ignore_newline(self, t):
         self.lineno += t.value.count("\n")
