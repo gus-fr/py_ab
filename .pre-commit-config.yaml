@@ -26,7 +26,7 @@ repos:
             src/pli_api/tests/integration/resources/.*
           )$
       - id: no-commit-to-branch
-        args: [--branch, master, --branch, develop]
+        args: [--branch, main]
       - id: requirements-txt-fixer
       - id: trailing-whitespace
 
