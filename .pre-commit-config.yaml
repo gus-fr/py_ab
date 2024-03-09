@@ -1,0 +1,57 @@
+default_stages: [commit]
+repos:
+  - repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v4.0.1
+    hooks:
+      - id: check-added-large-files
+      - id: check-docstring-first
+      - id: check-executables-have-shebangs
+      - id: check-merge-conflict
+      - id: check-shebang-scripts-are-executable
+      - id: check-yaml
+      - id: debug-statements
+      - id: detect-aws-credentials
+        stages: [commit, manual]
+        args: [--allow-missing-credentials]
+      - id: detect-private-key
+        stages: [commit, manual]
+      - id: end-of-file-fixer
+      - id: mixed-line-ending
+      - id: name-tests-test
+        args: [--django]
+        exclude: |
+          (?x) ^(
+            src/pli_api/tests/stress/.*|
+            src/pli_api/tests/unit/resources/.*|
+            src/pli_api/tests/integration/resources/.*
+          )$
+      - id: no-commit-to-branch
+        args: [--branch, master, --branch, develop]
+      - id: requirements-txt-fixer
+      - id: trailing-whitespace
+
+  - repo: https://github.com/PyCQA/flake8
+    rev: 5.0.4
+    hooks:
+      - id: flake8
+        stages: [commit, manual]
+        args: [--max-line-length, "88"]
+
+  - repo: https://github.com/timothycrosley/isort
+    rev: 5.12.0
+    hooks:
+      - id: isort
+        args: ["--profile", "black"]
+        stages: [commit, manual]
+
+  - repo: https://github.com/asottile/pyupgrade
+    rev: v2.38.0
+    hooks:
+      - id: pyupgrade
+        args: [--py37-plus]
+
+  - repo: https://github.com/psf/black
+    rev: 22.8.0
+    hooks:
+      - id: black
+        language_version: python3
