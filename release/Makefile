@@ -10,3 +10,10 @@ upload-python-package: build-python-package
 	--password "$${TWINE_TOKEN}" \
     ../dist/* \
 	--verbose;
+
+.PHONY: bump-minor
+bump-minor: build-python-package
+	bump2version minor
+	git add .
+	git commit -m "Bumped minor version"
+	git push origin --tags
