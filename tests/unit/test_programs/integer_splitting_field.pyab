@@ -1,0 +1,11 @@
+/* Code to test that the generated experiment uses conditionals properly
+
+*/
+def test_experiment{
+        salt:"HAGFEUAKVDU"
+        splitters: numeric_field
+
+            return "Setting 1" weighted 1,
+                    "Setting 2" weighted 1,
+                    "Setting 3" weighted 2
+}

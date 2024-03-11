@@ -67,3 +67,22 @@ def test_splitter_test():
     assert low_estimate <= group_ctr_other["Setting 1"] / trials <= hi_estimate
     (low_estimate, hi_estimate) = confidence_interval(trials, p=1 / 2, confidence=0.999)
     assert low_estimate <= group_ctr_other["Setting 2"] / trials <= hi_estimate
+
+
+def test_int_splitter():
+    """
+    makes sure the router works with the conditional operations as intended
+    no AB tests in this source file
+    """
+    trials = 10000
+    experiment = load_experiment("integer_splitting_field.pyab")
+    group_ctr = Counter()
+
+    for datapoint in sample_data(10000):
+        group_ctr[experiment(**datapoint)] += 1
+
+    (low_estimate, hi_estimate) = confidence_interval(trials, p=1 / 4, confidence=0.999)
+    assert low_estimate <= group_ctr["Setting 1"] / trials <= hi_estimate
+    assert low_estimate <= group_ctr["Setting 2"] / trials <= hi_estimate
+    (low_estimate, hi_estimate) = confidence_interval(trials, p=1 / 2, confidence=0.999)
+    assert low_estimate <= group_ctr["Setting 3"] / trials <= hi_estimate
