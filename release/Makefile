@@ -29,5 +29,5 @@ bump-minor: build-python-package
 bump-patch: build-python-package
 	bump2version patch
 	git add .
-	git commit -m "Bumped package version"
+	git commit -m "Bumped patch package version"
 	git push origin --tags
