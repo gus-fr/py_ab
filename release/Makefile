@@ -1,6 +1,6 @@
 .PHONY: build-python-package
 build-python-package:
-	rm -rf ./dist
+	rm -rf ../dist
 	poetry build
 
 .PHONY: upload-python-package-test
