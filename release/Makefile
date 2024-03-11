@@ -24,3 +24,10 @@ bump-minor: build-python-package
 	git add .
 	git commit -m "Bumped package version"
 	git push origin --tags
+
+.PHONY: bump-patch
+bump-patch: build-python-package
+	bump2version patch
+	git add .
+	git commit -m "Bumped package version"
+	git push origin --tags
