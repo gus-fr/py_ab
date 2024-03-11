@@ -4,7 +4,7 @@ build-backend = "poetry.core.masonry.api"
 
 [tool.poetry]
 name = "py-ab-experiment"
-version = "0.1.0"
+version = "0.1.1"
 description = "Pythonic AB Experiment Framework"
 authors = ["gus-fr <gustavo_frigo@hotmail.com>"]
 readme = "README.md"
