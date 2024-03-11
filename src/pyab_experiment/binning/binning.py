@@ -11,10 +11,6 @@ from typing import TypeVar
 T = TypeVar("T")
 
 
-class NoSliceFoundError(Exception):
-    """error class for when we can't find a slice in an experiment for a data point"""
-
-
 def deterministic_proba(input_string: str) -> float:
     """gives a deterministic number in the range [0.0, 1.0) based on
     the input string. The idea is that if we give different strings

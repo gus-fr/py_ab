@@ -21,6 +21,15 @@ upload-python-package: build-python-package
 .PHONY: bump-minor
 bump-minor: build-python-package
 	bump2version minor
-	git add .
+	git add -A
 	git commit -m "Bumped package version"
+	git push origin
+	git push origin --tags
+
+.PHONY: bump-patch
+bump-patch: build-python-package
+	bump2version patch
+	git add -A
+	git commit -m "Bumped patch package version"
+	git push origin
 	git push origin --tags

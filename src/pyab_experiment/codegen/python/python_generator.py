@@ -58,22 +58,7 @@ class PythonCodeGen:
         main method. Does a DFS on the syntax tree rendering
         code as it traverses the nodes
         """
-
-        salt_def = (
-            f"'{self._experiment_ast.salt}'"
-            if self._experiment_ast.salt is not None
-            else "''"
-        )
-        fields_def = ""
-        if self._experiment_ast.splitting_fields:
-            for var in self._experiment_ast.splitting_fields:
-                self._local_vars.add(var)
-            fields_def = f"''.join([{', '.join(self.local_vars)}])"
-
-        if len(fields_def) == 0:
-            composite_key = "None"
-        else:
-            composite_key = f"{salt_def}+{fields_def}"
+        composite_key = self.generate_key_definition()
 
         # either we define a function inside the main fn, or at the root
         if self._expose_fn:
@@ -112,6 +97,26 @@ class PythonCodeGen:
                 f"{self.render_topline()}{fn_defn}{variant_fn_signature}"
                 f"{variant_fn_body}{function_call}"
             )
+
+    def generate_key_definition(self) -> str:
+        salt_def = (
+            f"'{self._experiment_ast.salt}'"
+            if self._experiment_ast.salt is not None
+            else "''"
+        )
+
+        fields_def = ""
+        if self._experiment_ast.splitting_fields:
+            for var in self._experiment_ast.splitting_fields:
+                self._local_vars.add(var)
+            fields_def = f"''.join(map(str, [{', '.join(self.local_vars)}]))"
+
+        if len(fields_def) == 0:
+            composite_key = "None"
+        else:
+            composite_key = f"{salt_def}+{fields_def}"
+
+        return composite_key
 
     def _generate_conditionals(
         self, condition: ExperimentConditional | list[ExperimentGroup]
