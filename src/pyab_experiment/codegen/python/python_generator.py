@@ -41,7 +41,10 @@ class PythonCodeGen:
         return sorted(self._conditional_ids)
 
     def render_topline(self) -> str:
-        """imports et.al"""
+        """
+        renders the topline of our python code
+        i.e. imports, and top line comment
+        """
         return (
             f"from functools import partial{self._newline}"
             "from pyab_experiment.binning.binning import "
@@ -51,11 +54,16 @@ class PythonCodeGen:
         )
 
     def indent(self) -> str:
+        """
+        helper function that renders scope sensitive indentation
+        using an internal state to keep track the position in the
+        AST traversal
+        """
         return "".join([self._indentation_char * self._indent_depth])
 
     def generate(self) -> str:
         """
-        main method. Does a DFS on the syntax tree rendering
+        main method. Does a DFS on the AST rendering python
         code as it traverses the nodes
         """
         composite_key = self.generate_key_definition()
@@ -99,6 +107,10 @@ class PythonCodeGen:
             )
 
     def generate_key_definition(self) -> str:
+        """
+        generate the composite hash key to split experiment groups
+        based on the definition of splitting fields and salt
+        """
         salt_def = (
             f"'{self._experiment_ast.salt}'"
             if self._experiment_ast.salt is not None
@@ -165,6 +177,7 @@ class PythonCodeGen:
     def _generate_predicate(
         self, predicate: TerminalPredicate | RecursivePredicate | None
     ) -> str:
+        """Generates (potentially recursive) predicate statements"""
         match predicate:
             case TerminalPredicate():
                 l_term = self._generate_term(predicate.left_term)
@@ -190,6 +203,7 @@ class PythonCodeGen:
                 )
 
     def _generate_term(self, term: float | int | str | tuple | Identifier) -> str:
+        """renders a term"""
         match term:
             case Identifier(name=identifier_name):
                 self._conditional_ids.add(identifier_name)
@@ -200,6 +214,7 @@ class PythonCodeGen:
                 return term
 
     def _generate_op(self, op: LogicalOperatorEnum | BooleanOperatorEnum) -> str:
+        """renders legal python operations"""
         match op:
             case LogicalOperatorEnum.EQ:
                 return "=="
