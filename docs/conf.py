@@ -33,6 +33,8 @@ autoapi_dirs = ["../src"]
 
 def skip_sly(app, what, name, obj, skip, options):
     if name.startswith("pyab_experiment.sly") and what != "package":
+        skip = True
+    elif name.startswith("pyab_experiment.language") and what != "package":
         #    if what == "class" and "util" in name:
         skip = True
     return skip
