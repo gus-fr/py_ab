@@ -17,6 +17,14 @@ from pyab_experiment.sly import Parser
 
 
 class ExperimentParser(Parser):
+    """Defines the grammar for an AB testing configuration language.
+
+    This class defines a set of rules (grammar) for parsing and validating AB testing
+    configuration files. The grammar defines the structure and syntax of the
+    configuration language, which is used to specify AB tests and their
+    associated settings.
+    """
+
     # Uncomment to print updated grammar
     # debugfile = 'parser.out'
     tokens = ExperimentLexer.tokens

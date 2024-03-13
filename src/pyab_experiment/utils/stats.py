@@ -4,13 +4,30 @@ from math import log, pi
 
 
 def probit(alpha: float = 0.5) -> float:
-    """Return the probit function.
+    """Compute the probit of a given value.
 
-    The probit function is the quantile function associated with
-    the standard normal distribution.
+    The probit function is the inverse of the cumulative distribution function
+    (CDF) of the standard normal distribution. It maps a probability (between 0
+    and 1) to a corresponding value  on the real number line.
 
-    See `https://en.wikipedia.org/wiki/Probit for the approximation`_
-    of using the logit function."""
+    Args:
+        alpha (float): The probability value for which to compute the probit.
+            Default is 0.5, which corresponds to the median of the standard
+            normal distribution.
+
+    Returns:
+        float: The probit value corresponding to the input probability.
+
+    Note:
+        See `https://en.wikipedia.org/wiki/Probit for the approximation`_
+        of using the logit function.
+
+    Examples:
+        >>> probit(0.5)
+        0.0
+        >>> probit(0.975)
+        1.959963984540054
+    """
 
     # our version of mypy doesn't have proper types on pow
     # ignore for now until we upgrade

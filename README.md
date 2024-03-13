@@ -1,7 +1,8 @@
-# PYthonABTesting
 Library that defines a simplified language to set up and generate AB test functions within a python ecosystempy
 
-# TL;DR
+# Getting Started
+First 'pip install py-ab-experiment' to install the library
+
 To get started you can use one of the sample files provided in `src/tests/unit/test_programs`
 These are sample AB test definitions that both serve as unit tests, and provide sample file definitons.
 using the `splitter_test.pyab` definition, which is defined as

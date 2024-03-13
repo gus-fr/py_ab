@@ -11,7 +11,14 @@ from pyab_experiment.sly import Lexer
 
 
 class ExperimentLexer(Lexer):
-    """Lexer rules for our language"""
+    """Lexical analyzer for an AB testing configuration language.
+
+    This class provides a method for tokenizing an AB testing configuration
+    file into a list of tokens, to be used for parsing and validation, in conjunction
+    with the grammar defined in a companion class.
+    The lexer uses regular expressions to match terminal patterns in the configuration
+    file and generate corresponding tokens.
+    """
 
     # define token list to be used by the grammar
     tokens = {
@@ -120,7 +127,8 @@ class ExperimentLexer(Lexer):
 
 
 class BlockComment(Lexer):
-    """state that deals and discards C style block comments"""
+    """Helper state that deals with C style opening
+    and closing block comments"""
 
     tokens = {BLOCK_COMMENT_END}
 

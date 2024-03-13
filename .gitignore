@@ -2,3 +2,5 @@
 .vscode/*
 dist/*
 .env
+generated_docs/*
+.DS_Store
