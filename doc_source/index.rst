@@ -11,7 +11,6 @@ Welcome to py-ab-experiment's documentation!
    :caption: Contents:
 
    readme
-   api
 
 
 

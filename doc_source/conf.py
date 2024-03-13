@@ -14,7 +14,7 @@ release = "0.1.1"
 # -- General configuration ---------------------------------------------------
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#general-configuration
 
-extensions = ["recommonmark", "sphinx.ext.autodoc", "sphinx.ext.autosummary"]
+extensions = ["recommonmark", "autoapi.extension"]
 
 templates_path = ["_templates"]
 exclude_patterns = []
@@ -25,3 +25,5 @@ exclude_patterns = []
 
 html_theme = "alabaster"
 html_static_path = ["_static"]
+
+autoapi_dirs = ["../src"]

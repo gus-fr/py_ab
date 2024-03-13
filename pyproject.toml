@@ -25,6 +25,7 @@ black = "^24.2.0"
 bump2version = "^1.0.1"
 sphinx = "^7.2.6"
 recommonmark = "^0.7.1"
+sphinx-autoapi = "^3.0.0"
 
 [tool.pytest.ini_options]
 pythonpath = [
