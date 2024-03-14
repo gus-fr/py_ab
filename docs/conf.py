@@ -11,11 +11,16 @@ copyright = "2024, gus-fr"
 author = "[gus-fr](https://github.com/gus-fr)"
 release = "0.1.1"
 
-# -- General configuration ---------------------------------------------------
-# https://www.sphinx-doc.org/en/master/usage/configuration.html#general-configuration
+# -- extensions --
 
-extensions = ["recommonmark", "autoapi.extension"]
-
+extensions = [
+    "sphinx.ext.autodoc",
+    "sphinx.ext.autosummary",
+    "sphinx.ext.napoleon",
+    "recommonmark",
+    "sphinx.ext.viewcode",
+    "autoapi.extension",
+]
 templates_path = ["_templates"]
 exclude_patterns = []
 
@@ -26,9 +31,16 @@ exclude_patterns = []
 html_theme = "sphinx_rtd_theme"
 # html_static_path = ["_static"]
 
-# -- AutoApi settings ---------------------------------------------------------
+# AutoApi settings
 
+
+autoapi_type = "python"
 autoapi_dirs = ["../src"]
+autoapi_member_order = "groupwise"
+autoapi_keep_files = False  # set to True to see temp files
+autoapi_add_toctree_entry = True
+
+autodoc_typehints = "signature"
 
 
 def skip_sly(app, what, name, obj, skip, options):
