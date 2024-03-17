@@ -1,7 +1,7 @@
-Library that defines a simplified language to set up and generate AB test functions within a python ecosystempy
+Framework to define and run AB tests within a python ecosystempy
 
 [![Documentation Status](https://readthedocs.org/projects/py-ab/badge/?version=latest)](https://py-ab.readthedocs.io/en/latest/?badge=latest)
-
+[![PyPi Version](https://img.shields.io/pypi/v/py-ab-experiment.svg)](https://pypi.python.org/pypi/py-ab-experiment/)
 
 # Getting Started
 First 'pip install py-ab-experiment' to install the library
@@ -100,8 +100,8 @@ def complex_experiment_defn{
 
             // Return statements are probabilistic by nature
             // the weight defines the relative frequency of seeing one setting vs others
-            return 123 weighted 3.4,
-                    9.3 weighted 5,
+            return "123" weighted 3.4,
+                    "9.3" weighted 5,
                     "abc" weighted 3 /* like in C, embedded, multiline
                     block comment also works */
         }
