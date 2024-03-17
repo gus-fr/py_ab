@@ -123,5 +123,3 @@ def complex_experiment_defn{
     }
 }
 ```
-
-TBC
