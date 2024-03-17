@@ -1,5 +1,6 @@
 """test the parsing, lexing, and codegen of the sample files created
 the test only checks for errors, not the logic itself"""
+import os
 from pathlib import Path
 
 import pytest
@@ -8,15 +9,7 @@ from pyab_experiment.language.lexer import ExperimentLexer
 from pyab_experiment.utils.wraper_functions import generate_code, parse_source
 
 files_to_test = [
-    "basic_experiment.pyab",
-    "comments.pyab",
-    "full_grammar.pyab",
-    "salt.pyab",
-    "splitters.pyab",
-    "conditional.pyab",
-    "conditional_test_1.pyab",
-    "splitter_test.pyab",
-    "integer_splitting_field.pyab",
+    f for f in os.listdir(f"{Path(__file__).absolute().parent}/test_programs/")
 ]
 
 
