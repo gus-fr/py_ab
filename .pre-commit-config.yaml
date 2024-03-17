@@ -19,12 +19,6 @@ repos:
       - id: mixed-line-ending
       - id: name-tests-test
         args: [--django]
-        exclude: |
-          (?x) ^(
-            src/pli_api/tests/stress/.*|
-            src/pli_api/tests/unit/resources/.*|
-            src/pli_api/tests/integration/resources/.*
-          )$
       - id: no-commit-to-branch
         args: [--branch, main]
       - id: requirements-txt-fixer
@@ -51,7 +45,7 @@ repos:
         args: [--py37-plus]
 
   - repo: https://github.com/psf/black
-    rev: 22.8.0
+    rev: 24.2.0
     hooks:
       - id: black
         language_version: python3
