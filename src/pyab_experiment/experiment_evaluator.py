@@ -29,6 +29,21 @@ class ExperimentEvaluator:
         self.recompile(source_code)
 
     def recompile(self, source_code: str) -> None:
+        """Recompiles the source code.
+
+        This method takes a string of source code and recompiles it.
+
+        Args:
+            source_code (str): The source code to recompile.
+
+        Returns:
+            None: This method does not return a value, but it recompiles the
+                  source code.
+
+        Raises:
+            YaccError: If the source code is not valid (parsing error,
+            or invalid characters)
+        """
         new_checksum = hashlib.md5(source_code.encode("utf-8")).hexdigest()
 
         # only trigger a recompile on code that has changed
