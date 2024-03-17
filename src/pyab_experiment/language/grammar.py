@@ -30,9 +30,9 @@ class ExperimentParser(Parser):
     tokens = ExperimentLexer.tokens
 
     precedence = (
-        ("left", OR),
-        ("left", AND),
-        ("left", NOT),
+        ("left", KW_OR),
+        ("left", KW_AND),
+        ("left", KW_NOT),
     )
 
     @_("header_id LBRACE opt_header_salt opt_splitter conditional RBRACE")
@@ -49,7 +49,7 @@ class ExperimentParser(Parser):
     def empty(self, p):
         pass
 
-    @_("DEF ID")
+    @_("KW_DEF ID")
     def header_id(self, p):
         return p.ID
 
@@ -57,7 +57,7 @@ class ExperimentParser(Parser):
     def opt_header_salt(self, p):
         return None
 
-    @_("SALT COLON STRING_LITERAL")
+    @_("KW_SALT COLON STRING_LITERAL")
     def opt_header_salt(self, p):
         return p.STRING_LITERAL
 
@@ -65,7 +65,7 @@ class ExperimentParser(Parser):
     def opt_splitter(self, p):
         return None
 
-    @_("SPLITTERS COLON fields")
+    @_("KW_SPLITTERS COLON fields")
     def opt_splitter(self, p):
         return p.fields
 
@@ -78,7 +78,7 @@ class ExperimentParser(Parser):
         return [p.ID]
 
     # *************** Conditional rules *******************************
-    @_("IF predicate LBRACE conditional RBRACE subconditional ")
+    @_("KW_IF predicate LBRACE conditional RBRACE subconditional ")
     def conditional(self, p):
         return ExperimentConditional(
             conditional_type=ConditionalType.IF,
@@ -92,7 +92,7 @@ class ExperimentParser(Parser):
         # "unconditioned" conditional. serves as a stop recursion rule
         return p.return_expr
 
-    @_("ELIF predicate LBRACE conditional RBRACE subconditional")
+    @_("KW_ELIF predicate LBRACE conditional RBRACE subconditional")
     def subconditional(self, p):
         return ExperimentConditional(
             conditional_type=ConditionalType.ELIF,
@@ -101,7 +101,7 @@ class ExperimentParser(Parser):
             false_branch=p.subconditional,
         )
 
-    @_("ELSE LBRACE conditional RBRACE")
+    @_("KW_ELSE LBRACE conditional RBRACE")
     def subconditional(self, p):
         return ExperimentConditional(
             conditional_type=ConditionalType.ELSE,
@@ -125,7 +125,7 @@ class ExperimentParser(Parser):
     def predicate(self, p):
         return p.predicate
 
-    @_("predicate AND predicate")
+    @_("predicate KW_AND predicate")
     def predicate(self, p):
         return RecursivePredicate(
             left_predicate=p.predicate0,
@@ -133,7 +133,7 @@ class ExperimentParser(Parser):
             right_predicate=p.predicate1,
         )
 
-    @_("predicate OR predicate")
+    @_("predicate KW_OR predicate")
     def predicate(self, p):
         return RecursivePredicate(
             left_predicate=p.predicate0,
@@ -141,7 +141,7 @@ class ExperimentParser(Parser):
             right_predicate=p.predicate1,
         )
 
-    @_("NOT predicate")
+    @_("KW_NOT predicate")
     def predicate(self, p):
         return RecursivePredicate(
             left_predicate=p.predicate,
@@ -175,50 +175,50 @@ class ExperimentParser(Parser):
 
     # ********** Boolean ops*********************
 
-    @_("LT")
+    @_("KW_LT")
     def logical_op(self, p):
         return LogicalOperatorEnum.LT
 
-    @_("GT")
+    @_("KW_GT")
     def logical_op(self, p):
         return LogicalOperatorEnum.GT
 
-    @_("GE")
+    @_("KW_GE")
     def logical_op(self, p):
         return LogicalOperatorEnum.GE
 
-    @_("LE")
+    @_("KW_LE")
     def logical_op(self, p):
         return LogicalOperatorEnum.LE
 
-    @_("IN")
+    @_("KW_IN")
     def logical_op(self, p):
         return LogicalOperatorEnum.IN
 
-    @_("NE")
+    @_("KW_NE")
     def logical_op(self, p):
         return LogicalOperatorEnum.NE
 
-    @_("EQ")
+    @_("KW_EQ")
     def logical_op(self, p):
         return LogicalOperatorEnum.EQ
 
-    @_("NOT_IN")
+    @_("KW_NOT_IN")
     def logical_op(self, p):
         return LogicalOperatorEnum.NOT_IN
 
     # *********** RETURN STATEMENTS *****************
-    @_("RETURN return_statement")
+    @_("KW_RETURN return_statement")
     def return_expr(self, p):
         return p.return_statement
 
-    @_("STRING_LITERAL WEIGHTED weight")
+    @_("STRING_LITERAL KW_WEIGHTED weight")
     def return_statement(self, p):
         return [
             ExperimentGroup(group_definition=p.STRING_LITERAL, group_weight=p.weight)
         ]
 
-    @_("STRING_LITERAL WEIGHTED weight COMMA return_statement")
+    @_("STRING_LITERAL KW_WEIGHTED weight COMMA return_statement")
     def return_statement(self, p):
         return [
             ExperimentGroup(group_definition=p.STRING_LITERAL, group_weight=p.weight)

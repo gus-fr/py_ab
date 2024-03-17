@@ -1,0 +1,5 @@
+
+def basic_experiment{
+            return "Setting 1" weighted 4,
+                    "Setting 2" weighted 1
+}

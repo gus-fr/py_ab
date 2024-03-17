@@ -30,28 +30,28 @@ class ExperimentLexer(Lexer):
         RPAREN,
         MINUS,
         COMMA,
-        EQ,
-        GT,
-        LT,
-        GE,
-        LE,
-        NE,
-        IN,
-        NOT,
-        NOT_IN,
-        DEF,
-        SALT,
-        SPLITTERS,
         COLON,
-        IF,
-        ELIF,
-        ELSE,
-        WEIGHTED,
-        RETURN,
-        AND,
-        OR,
         LBRACE,
         RBRACE,
+        KW_EQ,
+        KW_GT,
+        KW_LT,
+        KW_GE,
+        KW_LE,
+        KW_NE,
+        KW_IN,
+        KW_NOT,
+        KW_NOT_IN,
+        KW_DEF,
+        KW_SALT,
+        KW_SPLITTERS,
+        KW_IF,
+        KW_ELIF,
+        KW_ELSE,
+        KW_WEIGHTED,
+        KW_RETURN,
+        KW_AND,
+        KW_OR,
     }
 
     # Special symbols
@@ -64,27 +64,27 @@ class ExperimentLexer(Lexer):
     RBRACE = r"}"
 
     # logical operators
-    EQ = r"=="
-    GT = r">"
-    LT = r"<"
-    GE = r">="
-    LE = r"<="
-    NE = r"!="
-    IN = r"in"
-    NOT_IN = r"not\s+in"
-    NOT = r"not"
+    KW_EQ = r"=="
+    KW_GT = r">"
+    KW_LT = r"<"
+    KW_GE = r">="
+    KW_LE = r"<="
+    KW_NE = r"!="
+    KW_IN = r"in"
+    KW_NOT_IN = r"not\s+in"
+    KW_NOT = r"not"
 
     # reserved kw
-    DEF = r"def"
-    SALT = r"salt"
-    SPLITTERS = r"splitters"
-    IF = r"if"
-    ELIF = r"else\s*if"
-    ELSE = r"else"
-    WEIGHTED = r"weighted"
-    RETURN = r"return"
-    AND = r"and"
-    OR = r"or"
+    KW_DEF = r"def"
+    KW_SALT = r"salt"
+    KW_SPLITTERS = r"splitters"
+    KW_IF = r"if"
+    KW_ELIF = r"else\s*if"
+    KW_ELSE = r"else"
+    KW_WEIGHTED = r"weighted"
+    KW_RETURN = r"return"
+    KW_AND = r"and"
+    KW_OR = r"or"
 
     # identifiers
     ID = r"[a-zA-Z_][a-zA-Z0-9_]*"
