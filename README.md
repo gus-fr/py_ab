@@ -1,5 +1,8 @@
 Library that defines a simplified language to set up and generate AB test functions within a python ecosystempy
 
+[![Documentation Status](https://readthedocs.org/projects/py-ab/badge/?version=latest)](https://py-ab.readthedocs.io/en/latest/?badge=latest)
+
+
 # Getting Started
 First 'pip install py-ab-experiment' to install the library
 
