@@ -9,6 +9,20 @@ from pyab_experiment.experiment_evaluator import ExperimentEvaluator
 from pyab_experiment.utils.stats import confidence_interval
 
 
+def get_program_str(file_name: str) -> str:
+    with open(f"{Path(__file__).absolute().parent}/test_programs/{file_name}") as fp:
+        return fp.read()
+
+
+def assert_bernoulli_trials_proportion(
+    trials: int, observed: int, expected_p: float
+) -> None:
+    (low_estimate, hi_estimate) = confidence_interval(
+        trials, p=expected_p, confidence=0.999
+    )
+    assert low_estimate <= observed / trials <= hi_estimate
+
+
 def load_experiment(file_name):
     with open(f"{Path(__file__).absolute().parent}/test_programs/{file_name}") as fp:
         return ExperimentEvaluator(fp.read())
@@ -58,15 +72,19 @@ def test_splitter_test():
             experiment(my_id=datapoint.get("groupping_id"), field_1="sth_else")
         ] += 1
 
-    (low_estimate, hi_estimate) = confidence_interval(trials, p=4 / 5, confidence=0.999)
-    assert low_estimate <= group_ctr_a["Setting 1"] / trials <= hi_estimate
-    (low_estimate, hi_estimate) = confidence_interval(trials, p=1 / 5, confidence=0.999)
-    assert low_estimate <= group_ctr_a["Setting 2"] / trials <= hi_estimate
+    assert_bernoulli_trials_proportion(
+        trials=trials, observed=group_ctr_a["Setting 1"], expected_p=4 / 5
+    )
+    assert_bernoulli_trials_proportion(
+        trials=trials, observed=group_ctr_a["Setting 2"], expected_p=1 / 5
+    )
 
-    (low_estimate, hi_estimate) = confidence_interval(trials, p=1 / 2, confidence=0.999)
-    assert low_estimate <= group_ctr_other["Setting 1"] / trials <= hi_estimate
-    (low_estimate, hi_estimate) = confidence_interval(trials, p=1 / 2, confidence=0.999)
-    assert low_estimate <= group_ctr_other["Setting 2"] / trials <= hi_estimate
+    assert_bernoulli_trials_proportion(
+        trials=trials, observed=group_ctr_other["Setting 1"], expected_p=1 / 2
+    )
+    assert_bernoulli_trials_proportion(
+        trials=trials, observed=group_ctr_other["Setting 2"], expected_p=1 / 2
+    )
 
 
 def test_int_splitter():
@@ -78,11 +96,46 @@ def test_int_splitter():
     experiment = load_experiment("integer_splitting_field.pyab")
     group_ctr = Counter()
 
-    for datapoint in sample_data(10000):
+    for datapoint in sample_data(trials):
         group_ctr[experiment(**datapoint)] += 1
 
-    (low_estimate, hi_estimate) = confidence_interval(trials, p=1 / 4, confidence=0.999)
-    assert low_estimate <= group_ctr["Setting 1"] / trials <= hi_estimate
-    assert low_estimate <= group_ctr["Setting 2"] / trials <= hi_estimate
-    (low_estimate, hi_estimate) = confidence_interval(trials, p=1 / 2, confidence=0.999)
-    assert low_estimate <= group_ctr["Setting 3"] / trials <= hi_estimate
+    assert_bernoulli_trials_proportion(
+        trials=trials, observed=group_ctr["Setting 1"], expected_p=1 / 4
+    )
+    assert_bernoulli_trials_proportion(
+        trials=trials, observed=group_ctr["Setting 2"], expected_p=1 / 4
+    )
+    assert_bernoulli_trials_proportion(
+        trials=trials, observed=group_ctr["Setting 3"], expected_p=1 / 2
+    )
+
+
+def test_recompilation():
+    """
+    makes sure we can dynamically recompile configurations
+    """
+    trials = 10000
+    experiment = load_experiment("basic_experiment.pyab")  # 50:50 split
+    group_ctr = Counter()
+
+    for _ in range(trials):
+        group_ctr[experiment()] += 1
+
+    assert_bernoulli_trials_proportion(
+        trials=trials, observed=group_ctr["Setting 1"], expected_p=1 / 2
+    )
+    assert_bernoulli_trials_proportion(
+        trials=trials, observed=group_ctr["Setting 2"], expected_p=1 / 2
+    )
+
+    experiment.recompile(get_program_str("basic_experiment_recompiled.pyab"))
+    group_ctr.clear()
+    for _ in range(trials):
+        group_ctr[experiment()] += 1
+
+    assert_bernoulli_trials_proportion(
+        trials=trials, observed=group_ctr["Setting 1"], expected_p=4 / 5
+    )
+    assert_bernoulli_trials_proportion(
+        trials=trials, observed=group_ctr["Setting 2"], expected_p=1 / 5
+    )
