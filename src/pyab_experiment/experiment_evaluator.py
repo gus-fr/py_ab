@@ -26,6 +26,9 @@ class ExperimentEvaluator:
     _checksum: str = ""
 
     def __init__(self, source_code: str) -> None:
+        self.recompile(source_code)
+
+    def recompile(self, source_code: str) -> None:
         new_checksum = hashlib.md5(source_code.encode("utf-8")).hexdigest()
 
         # only trigger a recompile on code that has changed
