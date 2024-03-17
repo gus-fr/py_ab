@@ -392,9 +392,9 @@ class Lexer(metaclass=LexerMeta):
         self.begin(self.__state_stack.pop())
 
     def tokenize(self, text, lineno=1, index=0):
-        _ignored_tokens = (
-            _master_re
-        ) = _ignore = _token_funcs = _literals = _remapping = None
+        _ignored_tokens = _master_re = _ignore = _token_funcs = _literals = (
+            _remapping
+        ) = None
 
         # --- Support for state changes
         def _set_state(cls):
