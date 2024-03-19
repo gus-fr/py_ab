@@ -2,6 +2,7 @@
 Assuming we are able to generate code,
 test that the logic of the generated code works
 """
+
 from collections import Counter
 from pathlib import Path
 
@@ -139,3 +140,27 @@ def test_recompilation():
     assert_bernoulli_trials_proportion(
         trials=trials, observed=group_ctr["Setting 2"], expected_p=1 / 5
     )
+
+
+def test_polymorphic_return():
+    """
+    makes sure the router works with the conditional operations as intended
+    no AB tests in this source file
+    """
+    experiment = load_experiment("polymorphic_return.pyab")
+    group_ctr = Counter()
+
+    for datapoint in sample_data(10000):
+        group = experiment(**datapoint)
+        if isinstance(group, float):
+            group_ctr[f"float_{str(group)}"] += 1
+        elif isinstance(group, int):
+            group_ctr[f"int_{str(group)}"] += 1
+        else:
+            group_ctr[group] += 1
+
+    assert group_ctr["int_0"] == 1000
+    assert group_ctr["float_1.5"] == 1000
+    assert group_ctr["G2-5"] == 4000
+    assert group_ctr["G6+"] == 4000
+    assert group_ctr["default_grp"] == 0  # to test all data points have been assigned

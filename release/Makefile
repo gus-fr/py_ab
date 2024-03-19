@@ -19,7 +19,7 @@ upload-python-package: build-python-package
 	--verbose;
 
 .PHONY: bump-minor
-bump-minor: build-python-package
+bump-minor:
 	bump2version minor
 	git add -A
 	git commit -m "Bumped package version"
@@ -27,7 +27,7 @@ bump-minor: build-python-package
 	git push origin --tags
 
 .PHONY: bump-patch
-bump-patch: build-python-package
+bump-patch:
 	bump2version patch
 	git add -A
 	git commit -m "Bumped patch package version"

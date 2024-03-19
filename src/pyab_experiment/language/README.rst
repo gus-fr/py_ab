@@ -57,8 +57,8 @@ Language syntax
 
     <return_expr> ::= KW_RETURN <return_statement>
 
-    <return_statement> ::= <STRING_LITERAL> KW_WEIGHTED <weight> "," <return_statement>
-                        | <STRING_LITERAL> KW_WEIGHTED <weight>
+    <return_statement> ::= literal KW_WEIGHTED <weight> "," <return_statement>
+                        | literal KW_WEIGHTED <weight>
 
     <weight> ::= <NON_NEG_FLOAT>
                | <NON_NEG_INTEGER>
