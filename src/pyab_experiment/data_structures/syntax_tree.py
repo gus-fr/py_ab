@@ -65,8 +65,11 @@ class ExperimentGroup(BaseModel):
         group_weight (Union[NonNegativeFloat, NonNegativeInt]): The weight of the group.
     """
 
-    group_definition: str
+    group_definition: Union[int, float, str]
     group_weight: Union[NonNegativeFloat, NonNegativeInt]
+
+    class Config:
+        smart_union = True
 
 
 class Identifier(BaseModel):

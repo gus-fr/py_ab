@@ -212,16 +212,14 @@ class ExperimentParser(Parser):
     def return_expr(self, p):
         return p.return_statement
 
-    @_("STRING_LITERAL KW_WEIGHTED weight")
+    @_("literal KW_WEIGHTED weight")
     def return_statement(self, p):
-        return [
-            ExperimentGroup(group_definition=p.STRING_LITERAL, group_weight=p.weight)
-        ]
+        return [ExperimentGroup(group_definition=p.literal, group_weight=p.weight)]
 
-    @_("STRING_LITERAL KW_WEIGHTED weight COMMA return_statement")
+    @_("literal KW_WEIGHTED weight COMMA return_statement")
     def return_statement(self, p):
         return [
-            ExperimentGroup(group_definition=p.STRING_LITERAL, group_weight=p.weight)
+            ExperimentGroup(group_definition=p.literal, group_weight=p.weight)
         ] + p.return_statement
 
     # weights
