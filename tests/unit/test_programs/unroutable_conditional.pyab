@@ -1,0 +1,9 @@
+/* Code to test that the generated experiment uses conditionals properly
+
+*/
+def test_experiment_unroutable{
+        splitters: groupping_id, groupping_id_1
+        if routing_field==0 { return 0 weighted 1 }
+        else if routing_field==1 { return 1.5 weighted 1 }
+
+}
