@@ -14,12 +14,14 @@ release = "0.2.1"
 # -- extensions --
 
 extensions = [
+    "sphinx_design",
     "sphinx.ext.autodoc",
     "sphinx.ext.autosummary",
     "sphinx.ext.napoleon",
     "recommonmark",
     "sphinx.ext.viewcode",
     "autoapi.extension",
+    "sphinx.ext.autosectionlabel",
 ]
 templates_path = ["_templates"]
 exclude_patterns = []
@@ -28,7 +30,7 @@ exclude_patterns = []
 # -- Options for HTML output -------------------------------------------------
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#options-for-html-output
 
-html_theme = "sphinx_rtd_theme"
+html_theme = "sphinx_book_theme"
 # html_static_path = ["_static"]
 
 # AutoApi settings
@@ -45,9 +47,6 @@ autodoc_typehints = "signature"
 
 def skip_sly(app, what, name, obj, skip, options):
     if name.startswith("pyab_experiment.sly") and what != "package":
-        skip = True
-    elif name.startswith("pyab_experiment.language") and what != "package":
-        #    if what == "class" and "util" in name:
         skip = True
     return skip
 

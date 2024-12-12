@@ -1,9 +1,11 @@
-"""_summary_
-Defines the lexer for the experiment language definition
-defines common constricts such as operators, identifiers, and common literals (floats, ints)
-also defines reserved keywords to be used by the grammar.
+"""Lexical Analysis for Experiment Language Definition
 
-uses YACC (via the sly implementation) the heavy FSA lifting
+This module defines the lexer for the experiment language definition.
+It includes common constructs such as operators, identifiers, and literals
+(floats, integers). The module also defines reserved keywords used by the grammar.
+
+The lexical analysis is performed using YACC (via the SLY implementation)
+for finite state automaton processing.
 """
 
 # flake8: noqa

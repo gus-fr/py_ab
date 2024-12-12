@@ -1,9 +1,114 @@
-The full gramar rules as defined in the :py:mod:`pyab_experiment.language` package
+
+The PyAB experiment language is a domain-specific language for defining A/B tests. It follows
+a C-style syntax while maintaining Python-like simplicity.
+Referenced by the :py:mod:`Language pyab_experiment.language` module
 
 .. _grammar:
 
-Language syntax
-----------------
+Basic Structure
+--------------
+
+Each experiment is defined using this basic structure:
+
+.. code-block:: python
+
+    def experiment_name {
+        [salt: "optional_salt"]
+        [splitters: field1, field2, ...]
+        conditional_logic
+    }
+
+Language Components
+------------------
+
+Return Statements
+~~~~~~~~~~~~~~~~
+
+Return statements define groups with weighted probabilities:
+
+.. code-block:: python
+
+    return "control" weighted 1,
+           "variant_a" weighted 2,
+           "variant_b" weighted 1
+
+This means:
+- variant_a has 2x the probability of being selected compared to control or variant_b
+- Total weights: 4 (1+2+1), so probabilities are:
+    - control: 25%
+    - variant_a: 50%
+    - variant_b: 25%
+
+Conditional Logic
+~~~~~~~~~~~~~~~
+
+The language supports nested if/else if/else statements:
+
+.. code-block:: python
+
+    if user_id in (1,2,3) {
+        return "group1" weighted 1
+    } else if country == "US" and age >= 18 {
+        return "group2" weighted 1
+    } else {
+        return "default" weighted 1
+    }
+
+Supported Operators
+~~~~~~~~~~~~~~~~
+
+- Comparison: ``==``, ``!=``, ``>``, ``<``, ``>=``, ``<=``, ``in``, ``not in``
+- Logical: ``and``, ``or``, ``not``
+- Values can be:
+    - Strings: ``"value"``
+    - Numbers: ``42``, ``3.14``, ``-1``
+    - Tuples: ``(1,2,3)``
+
+Comments
+~~~~~~~~
+
+Supports both C-style comments:
+
+.. code-block:: python
+
+    // Single line comment
+    /* Multi-line
+       comment block */
+
+Complete Example
+--------------
+
+Here's a real-world example with annotations:
+
+.. code-block:: python
+
+    def complex_experiment {
+        // Salt ensures consistent group assignment
+        salt: "user_exp_v1"
+
+        // Fields used for splitting traffic
+        splitters: user_id, country
+
+        // Target specific user segments
+        if age >= 21 and country in ("US", "CA") {
+            // High-value markets get 3 variants
+            return "control" weighted 1,
+                   "variant_a" weighted 2,
+                   "variant_b" weighted 2
+        } else if country not in ("US", "CA") {
+            // International markets get 2 variants
+            return "int_control" weighted 1,
+                   "int_variant" weighted 1
+        } else {
+            // Everyone else gets default experience
+            return "default" weighted 1
+        }
+    }
+
+Formal Grammar
+-------------
+
+The full grammar rules as defined in the language:
 
 .. code-block:: python
 
@@ -37,59 +142,58 @@ Language syntax
                   | "(" <predicate> ")"
                   | <term> <logical_op> <term>
 
-    <term> ::= <tuple>
-             | <ID>
-             | <literal>
+Terminal Tokens
+--------------
 
-    <tuple> ::= "(" <term> <op_term>
+Special Symbols
+~~~~~~~~~~~~~~
 
-    <op_term> ::= ")"
-                | "," <term> <op_term>
+.. code-block:: text
 
-    <logical_op> ::= KW_NOT_IN
-                   | KW_EQ
-                   | KW_NE
-                   | KW_IN
-                   | KW_LE
-                   | KW_GE
-                   | KW_GT
-                   | KW_LT
+    LPAREN      : \(
+    RPAREN      : \)
+    MINUS       : -
+    COMMA       : ,
+    COLON       : :
+    LBRACE      : {
+    RBRACE      : }
 
-    <return_expr> ::= KW_RETURN <return_statement>
+Logical Operators
+~~~~~~~~~~~~~~~
 
-    <return_statement> ::= literal KW_WEIGHTED <weight> "," <return_statement>
-                        | literal KW_WEIGHTED <weight>
+.. code-block:: text
 
-    <weight> ::= <NON_NEG_FLOAT>
-               | <NON_NEG_INTEGER>
+    KW_EQ       : ==
+    KW_GT       : >
+    KW_LT       : <
+    KW_GE       : >=
+    KW_LE       : <=
+    KW_NE       : !=
+    KW_IN       : in
+    KW_NOT_IN   : not\s+in
+    KW_NOT      : not
 
-    <literal> ::= <STRING_LITERAL>
-                | <NON_NEG_FLOAT>
-                | <NON_NEG_INTEGER>
-                | "-" <NON_NEG_FLOAT>
-                | "-" <NON_NEG_INTEGER>
+Reserved Keywords
+~~~~~~~~~~~~~~~
 
+.. code-block:: text
 
-The following reserved symbols are used in the lexer
+    KW_DEF          : def
+    KW_SALT         : salt
+    KW_SPLITTERS    : splitters
+    KW_IF           : if
+    KW_ELIF         : else\s*if
+    KW_ELSE         : else
+    KW_WEIGHTED     : weighted
+    KW_RETURN       : return
+    KW_AND          : and
+    KW_OR           : or
 
-.. code-block:: python
+Notes
+-----
 
-    KW_DEF = "def"
-    KW_SALT = "salt"
-    KW_SPLITTERS = "splitters"
-    KW_IF = "if"
-    KW_ELSE = "else"
-    KW_ELIF = "else if"
-    KW_NOT = "not"
-    KW_OR = "or"
-    KW_AND = "and"
-    KW_RETURN = "return"
-    KW_WEIGHTED = "weighted"
-    KW_NOT_IN = "not in"
-    KW_EQ = "=="
-    KW_NE = "!="
-    KW_IN = "in"
-    KW_LE = "<="
-    KW_GE = ">="
-    KW_GT = ">"
-    KW_LT = "<"
+1. All numeric literals must be non-negative (minus sign handled separately)
+2. String literals support both single and double quotes
+3. Keywords are case-sensitive
+4. Block comments support nesting through state management
+5. Whitespace is significant for some operators (e.g., 'not in')
