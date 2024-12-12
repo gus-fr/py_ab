@@ -2,6 +2,9 @@ import hashlib
 from functools import partial  # noqa: F401
 
 from pyab_experiment.binning.binning import deterministic_choice  # noqa: F401
+from pyab_experiment.codegen.python.custom_exceptions import (  # noqa: F401
+    ExperimentConditionalFailedError,
+)
 from pyab_experiment.codegen.python.python_generator import PythonCodeGen
 from pyab_experiment.utils.wraper_functions import parse_source
 

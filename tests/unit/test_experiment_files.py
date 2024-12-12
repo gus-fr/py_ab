@@ -1,5 +1,6 @@
 """test the parsing, lexing, and codegen of the sample files created
 the test only checks for errors, not the logic itself"""
+
 import os
 from pathlib import Path
 
