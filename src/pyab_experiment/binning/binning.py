@@ -1,4 +1,4 @@
-"""module that has the group splitting functions"""
+"""Module that contains group splitting functions"""
 
 import hashlib
 from bisect import bisect
@@ -12,15 +12,15 @@ T = TypeVar("T")
 
 
 def deterministic_proba(input_string: str) -> float:
-    """gives a deterministic number in the range [0.0, 1.0) based on
-    the input string. The idea is that if we give different strings
-    we'll get a float in [0.0, 1.0), based on an uniform distribution
+    """Generates a deterministic number in the range [0.0, 1.0) based on
+    the input string. When given different strings, it returns floats in [0.0, 1.0)
+    following a uniform distribution.
 
     Args:
-        input_string: the string to derive a float from
+        input_string: The string to derive a float from
     Returns:
-        float: a number in the range [0.0, 1.0), picked uniformly
-        from the space of all strings
+        float: A number in the range [0.0, 1.0), picked uniformly
+        from the space of all possible strings
     """
     digest = hashlib.md5(input_string.encode("ascii")).hexdigest()
     max_int = 0x100000000
@@ -37,26 +37,25 @@ def deterministic_choice(
     *,
     cum_weights: list[float] | None = None,
 ) -> T:
-    """like random.choices, but for a
-        deterministic hash function instead of a random number generator
-        Implementation details follows the random.choices one very closely
+    """Functions similarly to random.choices, but uses a deterministic hash function
+    instead of a random number generator. The implementation closely follows the
+    random.choices implementation.
 
-        as a cute feature, if no input_id is given, the fn falls back to the
-        classic choices call
+    As a convenience feature, if no input_id is provided, the function falls back to the
+    classic choices call.
 
-        N.B - since this function is deterministic, we can only sensibly choose 1
-        item with replacement from the population (all other items would be identical
-        to the first) so the k parameter is fixed at 1, and we return a single item
-        vs a collection like in random.choices
+    Note: Since this function is deterministic, we can only sensibly choose 1
+    item with replacement from the population (all other items would be identical
+    to the first). Therefore, the k parameter is fixed at 1, and we return a single item
+    rather than a collection like in random.choices.
+
     Args:
-        input_id: str|None: if None returns the classic random.choices. otherwise
-        computes a deterministic number of k groups (based on the input_id).
-        groups are chosen proportional to the weight, and uniformly across the space
-        of all input_ids
-        population (list[str]): list of items to choose from
-        weights (list[float] | None, optional): how much weight
-            to give to each item in the population
-        cum_weights (list[float]| None, optional): like weights but cumulative
+        input_id: If None, returns the classic random.choices result. Otherwise,
+            computes a deterministic choice based on the input_id. Items are chosen
+            proportionally to their weights and uniformly across all possible input_ids.
+        population: List of items to choose from
+        weights: Optional weights to assign to each item in the population
+        cum_weights: Optional cumulative weights (cannot be used with weights parameter)
     """
 
     n = len(population)

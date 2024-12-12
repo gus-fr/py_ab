@@ -1,4 +1,9 @@
-"""Module that does the translation from an AST to a python function"""
+"""Module that translates an Abstract Syntax Tree (AST) into executable Python code.
+
+This module contains the PythonCodeGen class which traverses an ExperimentAST and
+generates corresponding Python code for experiment variant selection. The generated
+code includes conditional logic, group assignments, and deterministic choice functions.
+"""
 
 from pyab_experiment.language.grammar import (
     BooleanOperatorEnum,
@@ -14,8 +19,23 @@ from pyab_experiment.language.grammar import (
 
 
 class PythonCodeGen:
-    """class that holds intermediate state (e.g indentation level, variable names)
-    while generating code
+    """Generates Python code from an ExperimentAST representation.
+
+    This class maintains state during AST traversal (like indentation level
+    and variable tracking)and provides methods to generate formatted Python
+    code for experiment variant selection.
+
+    Args:
+        experiment_ast (ExperimentAST): The AST to translate into Python code
+        indentation_char (str, optional): Character used for indentation.
+        Defaults to "\t" expose_experiment_variant_function (bool, optional):
+        Whether to expose the variant selection function at the root level.
+        Defaults to True
+
+    Attributes:
+        _local_vars (set): Tracks local variables used in the generated code
+        _conditional_ids (set): Tracks conditional variables referenced in predicates
+        _indent_depth (int): Current indentation level during code generation
     """
 
     def __init__(
@@ -107,9 +127,33 @@ class PythonCodeGen:
             )
 
     def generate_key_definition(self) -> str:
-        """
-        generate the composite hash key to split experiment groups
-        based on the definition of splitting fields and salt
+        """Generate the composite hash key used for deterministic experiment
+        group assignment.
+
+        This method combines the experiment's salt (if provided) with the string
+        representation of splitting fields to create a composite key.
+        This key is used by the deterministic_choice function to consistently
+        assign users to experiment groups.
+
+        The composite key is constructed as follows:
+        1. If a salt exists, it's used as a prefix
+        2. If splitting fields exist, their string representations are concatenated
+        3. If neither exists, returns "None"
+
+        Example outputs:
+            - With salt="exp1" and fields=[user_id, country]:
+              "'exp1'+''.join(map(str, [user_id, country]))"
+            - With only fields=[device_id]:
+              "''''.join(map(str, [device_id]))"
+            - With no salt or fields:
+              "None"
+
+        Returns:
+            str: A Python expression that evaluates to the composite key
+                 used for group assignment.
+
+        Side Effects:
+            - Adds any splitting field variables to self._local_vars
         """
         salt_def = (
             f"'{self._experiment_ast.salt}'"
@@ -133,9 +177,40 @@ class PythonCodeGen:
     def _generate_conditionals(
         self, condition: ExperimentConditional | list[ExperimentGroup]
     ) -> str:
-        """generates the (possibly nested) conditional statements,
-        and their return functions goes through through all the contitionals
-        and rendering appropriate function definitions
+        """Generates Python code for conditional statements and group return functions.
+
+        This method traverses the experiment's conditional structure and generates the
+        corresponding Python code. It handles:
+        1. Conditional statements (if/elif/else) with their predicates and branches
+        2. Terminal group definitions that return partial functions for
+        variant selection
+
+        Args:
+            condition: Either an ExperimentConditional for if/elif/else logic,
+                or a list[ExperimentGroup] for terminal group definitions.
+                - ExperimentConditional contains predicate and branch information
+                - list[ExperimentGroup] contains group definitions and weights
+
+        Returns:
+            str: Generated Python code as a string, including:
+                - For conditionals: if/elif/else statements with their predicates
+                - For groups: partial function definitions for variant selection
+
+        Raises:
+            RuntimeError: If an unsupported condition type is provided
+
+        Example generated code:
+            # For conditionals:
+            if (age >= 18):
+                return partial(deterministic_choice, population=['A', 'B'],
+                weights=[1, 2])
+            else:
+                return partial(deterministic_choice, population=['C', 'D'],
+                weights=[1, 1])
+
+            # For direct group definitions:
+            return partial(deterministic_choice, population=['A', 'B'],
+            weights=[1, 1])
         """
         match condition:
             case ExperimentConditional():
@@ -177,7 +252,27 @@ class PythonCodeGen:
     def _generate_predicate(
         self, predicate: TerminalPredicate | RecursivePredicate | None
     ) -> str:
-        """Generates (potentially recursive) predicate statements"""
+        """Generates Python code for predicate expressions in conditional statements.
+
+        This method handles three types of predicates:
+        1. Terminal predicates: Simple comparisons between two terms (e.g., "age >= 18")
+        2. Recursive predicates: Complex boolean expressions combining
+        multiple predicates
+        3. None: Returns an empty string (used in ELSE conditions)
+
+        Args:
+            predicate: The predicate to convert to Python code. Can be:
+                - TerminalPredicate: For simple comparisons
+                - RecursivePredicate: For complex boolean expressions
+                - None: For else conditions
+
+        Returns:
+            str: A Python expression string representing the predicate logic.
+
+        Raises:
+            RuntimeError: If an unsupported predicate type is provided.
+
+        """
         match predicate:
             case TerminalPredicate():
                 l_term = self._generate_term(predicate.left_term)
