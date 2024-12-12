@@ -3,7 +3,7 @@ The full gramar rules as defined in the :py:mod:`pyab_experiment.language` packa
 .. _grammar:
 
 Language syntax
-----------------
+================
 
 .. code-block:: python
 
@@ -70,26 +70,130 @@ Language syntax
                 | "-" <NON_NEG_INTEGER>
 
 
-The following reserved symbols are used in the lexer
 
-.. code-block:: python
 
-    KW_DEF = "def"
-    KW_SALT = "salt"
-    KW_SPLITTERS = "splitters"
-    KW_IF = "if"
-    KW_ELSE = "else"
-    KW_ELIF = "else if"
-    KW_NOT = "not"
-    KW_OR = "or"
-    KW_AND = "and"
-    KW_RETURN = "return"
-    KW_WEIGHTED = "weighted"
-    KW_NOT_IN = "not in"
-    KW_EQ = "=="
-    KW_NE = "!="
-    KW_IN = "in"
-    KW_LE = "<="
-    KW_GE = ">="
-    KW_GT = ">"
-    KW_LT = "<"
+
+Terminal Tokens
+=======================
+
+Special Symbols
+----------------
+
+.. code-block:: text
+
+    LPAREN      : \(
+    RPAREN      : \)
+    MINUS       : -
+    COMMA       : ,
+    COLON       : :
+    LBRACE      : {
+    RBRACE      : }
+
+Logical Operators
+------------------
+
+.. code-block:: text
+
+    KW_EQ       : ==
+    KW_GT       : >
+    KW_LT       : <
+    KW_GE       : >=
+    KW_LE       : <=
+    KW_NE       : !=
+    KW_IN       : in
+    KW_NOT_IN   : not\s+in
+    KW_NOT      : not
+
+Reserved Keywords
+------------------
+
+.. code-block:: text
+
+    KW_DEF          : def
+    KW_SALT         : salt
+    KW_SPLITTERS    : splitters
+    KW_IF           : if
+    KW_ELIF         : else\s*if
+    KW_ELSE         : else
+    KW_WEIGHTED     : weighted
+    KW_RETURN       : return
+    KW_AND          : and
+    KW_OR           : or
+
+Identifiers & Literals
+-----------------------
+
+.. code-block:: text
+
+    ID              : [a-zA-Z_][a-zA-Z0-9_]*
+    NON_NEG_FLOAT   : \d+\.\d+          → Converted to float
+    NON_NEG_INTEGER : \d+               → Converted to int
+    STRING_LITERAL  : \".*?\"|\'.*?\'    → Strips quotes
+
+Comments
+--------
+
+.. code-block:: text
+
+    Block Comments  : /* ... */         → Multi-line C-style comments
+    Inline Comments : //.*              → Single line comments (ignored)
+
+Ignored Patterns
+-----------------
+
+.. code-block:: text
+
+    Newlines       : \n+               → Updates line counter
+    Whitespace     : \s+               → Ignored
+
+Token Flow Diagram
+-------------------
+
+::
+
+    Input Stream
+         ↓
+    +----------------+
+    |  Ignore Rules  |
+    | (WS, Comments) |
+    +----------------+
+         ↓
+    +----------------+     +-----------------+
+    | Token Matching |     | Special States  |
+    | (Regex Rules)  |<--->| (BlockComment) |
+    +----------------+     +-----------------+
+         ↓
+    +----------------+
+    | Value Convert  |
+    | (Numbers, Str) |
+    +----------------+
+         ↓
+    Token Stream
+
+Pattern Precedence
+----------------
+
+1. Block comments (special state)
+2. Inline comments (ignored)
+3. Whitespace (ignored)
+4. Special symbols
+5. Multi-character operators
+6. Keywords
+7. Literals (float, integer, string)
+8. Identifiers
+
+Error Handling
+-------------
+
+- Illegal characters trigger error() method
+- Line numbers tracked for error reporting
+- Block comments maintain separate lexer state
+
+Notes
+-----
+
+1. All numeric literals must be non-negative (minus sign handled separately)
+2. String literals support both single and double quotes
+3. Keywords are case-sensitive
+4. Block comments support nesting through state management
+5. Whitespace is significant for some operators (e.g., 'not in')
