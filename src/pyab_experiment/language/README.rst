@@ -1,9 +1,114 @@
-The full gramar rules as defined in the :py:mod:`pyab_experiment.language` package
+
+The PyAB experiment language is a domain-specific language for defining A/B tests. It follows
+a C-style syntax while maintaining Python-like simplicity.
+Referenced by the :py:mod:`Language pyab_experiment.language` module
 
 .. _grammar:
 
-Language syntax
-================
+Basic Structure
+--------------
+
+Each experiment is defined using this basic structure:
+
+.. code-block:: python
+
+    def experiment_name {
+        [salt: "optional_salt"]
+        [splitters: field1, field2, ...]
+        conditional_logic
+    }
+
+Language Components
+------------------
+
+Return Statements
+~~~~~~~~~~~~~~~~
+
+Return statements define groups with weighted probabilities:
+
+.. code-block:: python
+
+    return "control" weighted 1,
+           "variant_a" weighted 2,
+           "variant_b" weighted 1
+
+This means:
+- variant_a has 2x the probability of being selected compared to control or variant_b
+- Total weights: 4 (1+2+1), so probabilities are:
+    - control: 25%
+    - variant_a: 50%
+    - variant_b: 25%
+
+Conditional Logic
+~~~~~~~~~~~~~~~
+
+The language supports nested if/else if/else statements:
+
+.. code-block:: python
+
+    if user_id in (1,2,3) {
+        return "group1" weighted 1
+    } else if country == "US" and age >= 18 {
+        return "group2" weighted 1
+    } else {
+        return "default" weighted 1
+    }
+
+Supported Operators
+~~~~~~~~~~~~~~~~
+
+- Comparison: ``==``, ``!=``, ``>``, ``<``, ``>=``, ``<=``, ``in``, ``not in``
+- Logical: ``and``, ``or``, ``not``
+- Values can be:
+    - Strings: ``"value"``
+    - Numbers: ``42``, ``3.14``, ``-1``
+    - Tuples: ``(1,2,3)``
+
+Comments
+~~~~~~~~
+
+Supports both C-style comments:
+
+.. code-block:: python
+
+    // Single line comment
+    /* Multi-line
+       comment block */
+
+Complete Example
+--------------
+
+Here's a real-world example with annotations:
+
+.. code-block:: python
+
+    def complex_experiment {
+        // Salt ensures consistent group assignment
+        salt: "user_exp_v1"
+
+        // Fields used for splitting traffic
+        splitters: user_id, country
+
+        // Target specific user segments
+        if age >= 21 and country in ("US", "CA") {
+            // High-value markets get 3 variants
+            return "control" weighted 1,
+                   "variant_a" weighted 2,
+                   "variant_b" weighted 2
+        } else if country not in ("US", "CA") {
+            // International markets get 2 variants
+            return "int_control" weighted 1,
+                   "int_variant" weighted 1
+        } else {
+            // Everyone else gets default experience
+            return "default" weighted 1
+        }
+    }
+
+Formal Grammar
+-------------
+
+The full grammar rules as defined in the language:
 
 .. code-block:: python
 
@@ -37,47 +142,11 @@ Language syntax
                   | "(" <predicate> ")"
                   | <term> <logical_op> <term>
 
-    <term> ::= <tuple>
-             | <ID>
-             | <literal>
-
-    <tuple> ::= "(" <term> <op_term>
-
-    <op_term> ::= ")"
-                | "," <term> <op_term>
-
-    <logical_op> ::= KW_NOT_IN
-                   | KW_EQ
-                   | KW_NE
-                   | KW_IN
-                   | KW_LE
-                   | KW_GE
-                   | KW_GT
-                   | KW_LT
-
-    <return_expr> ::= KW_RETURN <return_statement>
-
-    <return_statement> ::= literal KW_WEIGHTED <weight> "," <return_statement>
-                        | literal KW_WEIGHTED <weight>
-
-    <weight> ::= <NON_NEG_FLOAT>
-               | <NON_NEG_INTEGER>
-
-    <literal> ::= <STRING_LITERAL>
-                | <NON_NEG_FLOAT>
-                | <NON_NEG_INTEGER>
-                | "-" <NON_NEG_FLOAT>
-                | "-" <NON_NEG_INTEGER>
-
-
-
-
-
 Terminal Tokens
-=======================
+--------------
 
 Special Symbols
-----------------
+~~~~~~~~~~~~~~
 
 .. code-block:: text
 
@@ -90,7 +159,7 @@ Special Symbols
     RBRACE      : }
 
 Logical Operators
-------------------
+~~~~~~~~~~~~~~~
 
 .. code-block:: text
 
@@ -105,7 +174,7 @@ Logical Operators
     KW_NOT      : not
 
 Reserved Keywords
-------------------
+~~~~~~~~~~~~~~~
 
 .. code-block:: text
 
@@ -119,75 +188,6 @@ Reserved Keywords
     KW_RETURN       : return
     KW_AND          : and
     KW_OR           : or
-
-Identifiers & Literals
------------------------
-
-.. code-block:: text
-
-    ID              : [a-zA-Z_][a-zA-Z0-9_]*
-    NON_NEG_FLOAT   : \d+\.\d+          → Converted to float
-    NON_NEG_INTEGER : \d+               → Converted to int
-    STRING_LITERAL  : \".*?\"|\'.*?\'    → Strips quotes
-
-Comments
---------
-
-.. code-block:: text
-
-    Block Comments  : /* ... */         → Multi-line C-style comments
-    Inline Comments : //.*              → Single line comments (ignored)
-
-Ignored Patterns
------------------
-
-.. code-block:: text
-
-    Newlines       : \n+               → Updates line counter
-    Whitespace     : \s+               → Ignored
-
-Token Flow Diagram
--------------------
-
-::
-
-    Input Stream
-         ↓
-    +----------------+
-    |  Ignore Rules  |
-    | (WS, Comments) |
-    +----------------+
-         ↓
-    +----------------+     +-----------------+
-    | Token Matching |     | Special States  |
-    | (Regex Rules)  |<--->| (BlockComment) |
-    +----------------+     +-----------------+
-         ↓
-    +----------------+
-    | Value Convert  |
-    | (Numbers, Str) |
-    +----------------+
-         ↓
-    Token Stream
-
-Pattern Precedence
-----------------
-
-1. Block comments (special state)
-2. Inline comments (ignored)
-3. Whitespace (ignored)
-4. Special symbols
-5. Multi-character operators
-6. Keywords
-7. Literals (float, integer, string)
-8. Identifiers
-
-Error Handling
--------------
-
-- Illegal characters trigger error() method
-- Line numbers tracked for error reporting
-- Block comments maintain separate lexer state
 
 Notes
 -----
