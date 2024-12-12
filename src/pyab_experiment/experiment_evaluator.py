@@ -8,9 +8,16 @@ from pyab_experiment.codegen.python.custom_exceptions import (  # noqa: F401
 from pyab_experiment.codegen.python.python_generator import PythonCodeGen
 from pyab_experiment.utils.wraper_functions import parse_source
 
+
 # Note the noqa 401's ignoring the imported, not used
 # we are loading dynamic code that needs this libraries. so they are used
 # but flake can't know about it by looking at the static files
+class ParseError(Exception):
+    """Handles uncaught parsing errors"""
+
+    def __init__(self, message="Failed to parse experiment source code"):
+        self.message = message
+        super().__init__(self.message)
 
 
 class ExperimentEvaluator:
@@ -55,6 +62,8 @@ class ExperimentEvaluator:
             self._checksum = new_checksum
 
             ast = parse_source(source_code)
+            if ast is None:
+                raise ParseError()
             fn_name = ast.id
             exec(
                 compile(
