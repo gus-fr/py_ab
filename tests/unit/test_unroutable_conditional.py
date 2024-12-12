@@ -1,6 +1,7 @@
 """
 Assuming we are able to generate code,
-test that the logic of the generated code works
+test that when a conditional is not met, we raise an
+ExperimentConditionalFailedError
 """
 
 from pathlib import Path
@@ -33,7 +34,7 @@ def test_conditional_1():
     no AB tests in this source file
     """
     experiment = load_experiment("unroutable_conditional.pyab")
-    experiment(**sample_data(1))
+    experiment(**sample_data(1))  # has a good condition, don't raise anything
 
     with pytest.raises(ExperimentConditionalFailedError):
         experiment(**sample_data(2))
