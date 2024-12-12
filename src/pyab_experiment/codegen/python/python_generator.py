@@ -100,9 +100,7 @@ class PythonCodeGen:
         variant_fn_body = self._generate_conditionals(self._experiment_ast.conditions)
         variable_assignment = ", ".join([f"{id}={id}" for id in self.conditional_ids])
 
-        # add after variable_assignment since _generate_conditionals collects
-        # the conditipnal ids. in case we want to use them in the exception
-
+        # add after variable_assignment
         variant_fn_body += f"{self._newline}{self._generate_exception()}{self._newline}"
         self._indent_depth -= 1
         variant_fn_signature = (
