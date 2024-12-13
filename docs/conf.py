@@ -9,7 +9,7 @@
 project = "py-ab-experiment"
 copyright = "2024, gus-fr"
 author = "[gus-fr](https://github.com/gus-fr)"
-release = "0.3.1"
+release = "0.3.2"
 
 # -- extensions --
 
